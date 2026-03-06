@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "vikrr-com"
+  },
+  "targets": {
+    "vikrr-com": {
+      "hosting": {
+        "web": ["vikrr-com"]
+      }
+    }
+  }
+}
