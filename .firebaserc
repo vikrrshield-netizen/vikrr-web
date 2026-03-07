@@ -5,8 +5,18 @@
   "targets": {
     "vikrr-com": {
       "hosting": {
-        "web": ["vikrr-com"]
+        "web": [
+          "vikrr-com"
+        ]
+      }
+    },
+    "nominal-cmms": {
+      "hosting": {
+        "web": [
+          "vikrr-web"
+        ]
       }
     }
-  }
+  },
+  "etags": {}
 }
