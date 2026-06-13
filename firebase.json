@@ -4,10 +4,6 @@
       "target": "web",
       "public": "public",
       "ignore": ["firebase.json", "**/.*"],
-      "redirects": [
-        { "source": "/asset-shield", "destination": "/asset-shield/", "type": 301 },
-        { "source": "/takt", "destination": "/takt/", "type": 301 }
-      ],
       "rewrites": [
         { "source": "**", "destination": "/index.html" }
       ]
