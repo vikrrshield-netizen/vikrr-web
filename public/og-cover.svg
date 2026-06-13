@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="VIKRR — provozní software">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1713"/>
+      <stop offset="1" stop-color="#16332a"/>
+    </linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#27b487"/>
+      <stop offset="1" stop-color="#127a5b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1">
+    <path d="M0 158 H1200 M0 316 H1200 M0 474 H1200 M300 0 V630 M600 0 V630 M900 0 V630"/>
+  </g>
+  <g transform="translate(96,150)">
+    <rect width="58" height="58" rx="17" fill="#fdfaf3"/>
+    <path d="M14 16 L26 42 L32 42 L44 16 L37 16 L29 35 L21 16 Z" fill="#101814"/>
+    <text x="78" y="42" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="800" letter-spacing="6" fill="#fdfaf3">VIKRR</text>
+  </g>
+  <text x="96" y="330" font-family="Inter,Arial,sans-serif" font-size="74" font-weight="800" letter-spacing="-2" fill="#fdfaf3">Provozní software,</text>
+  <text x="96" y="410" font-family="Inter,Arial,sans-serif" font-size="74" font-weight="800" letter-spacing="-2" fill="#fdfaf3">který drží <tspan fill="#41d9a8">souvislosti</tspan>.</text>
+  <text x="96" y="478" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="500" fill="rgba(255,255,255,.66)">Asset Shield pro firemní provoz · TAKT pro osobní rytmus</text>
+  <g transform="translate(96,520)">
+    <rect width="190" height="48" rx="24" fill="url(#g)"/>
+    <text x="95" y="31" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700" fill="#fff">Otevřít demo</text>
+  </g>
+</svg>

@@ -5,6 +5,9 @@
       "public": "public",
       "ignore": ["firebase.json", "**/.*"],
       "rewrites": [
+        { "source": "/asset-shield/demo/**", "destination": "/asset-shield/demo/index.html" },
+        { "source": "/asset-shield/**", "destination": "/asset-shield/index.html" },
+        { "source": "/takt/**", "destination": "/takt/index.html" },
         { "source": "**", "destination": "/index.html" }
       ]
     }
