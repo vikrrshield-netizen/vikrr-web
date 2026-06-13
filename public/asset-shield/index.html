@@ -9,110 +9,82 @@
   <link rel="canonical" href="https://vikrr.com/asset-shield/">
   <style>
     *,*::before,*::after{box-sizing:border-box}*{margin:0}
-    :root{--ink:#10231d;--muted:#5d6d65;--paper:#f4efe7;--card:#fffdf8;--line:#ded6ca;--green:#147a5a;--mint:#e4f4ec;--blue:#235f93;--amber:#b97813;--red:#b7392e;--shadow:0 22px 58px rgba(16,35,29,.13)}
+    :root{--ink:#10231d;--muted:#5d6d65;--paper:#f1ece3;--card:#fffdf8;--line:#ded6ca;--green:#137a5b;--blue:#245f92;--amber:#b87513;--red:#b83a2f;--shadow:0 22px 58px rgba(16,35,29,.14)}
     html{scroll-behavior:smooth;background:var(--paper)}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f5efe7 0%,#fbf8f1 52%,#edf5ef 100%);line-height:1.55;-webkit-font-smoothing:antialiased}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f5efe7 0%,#fbf8f1 54%,#edf5ef 100%);line-height:1.55;-webkit-font-smoothing:antialiased}
     a{color:inherit;text-decoration:none}button{font:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
-    .nav{position:sticky;top:0;z-index:20;background:rgba(244,239,231,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(16,35,29,.09)}
-    .nav-in{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:950;letter-spacing:.04em}.links{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:760;font-size:.94rem}
+    .nav{position:sticky;top:0;z-index:20;background:rgba(244,239,231,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(16,35,29,.09)}.nav-in{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:950;letter-spacing:.04em}.links{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:760;font-size:.94rem}
     .btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid rgba(16,35,29,.14);background:var(--card);padding:0 18px;font-weight:850;white-space:nowrap}.btn.dark{background:var(--ink);border-color:var(--ink);color:white}.btn.green{background:var(--green);border-color:var(--green);color:white}
-    .hero{padding:74px 0 54px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr);gap:42px;align-items:center}.eyebrow{color:var(--green);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}
-    h1{margin-top:14px;font-size:clamp(2.35rem,5.2vw,4.8rem);line-height:1;letter-spacing:-.045em;max-width:780px}.lead{margin-top:20px;max-width:690px;color:#304139;font-size:1.08rem}.sub{margin-top:12px;color:var(--muted);max-width:690px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .hero{padding:74px 0 54px;display:grid;grid-template-columns:minmax(0,.88fr) minmax(460px,1.12fr);gap:42px;align-items:center}.eyebrow{color:var(--green);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}h1{margin-top:14px;font-size:clamp(2.3rem,5vw,4.75rem);line-height:1;letter-spacing:-.045em;max-width:780px}.lead{margin-top:20px;max-width:690px;color:#304139;font-size:1.08rem}.sub{margin-top:12px;color:var(--muted);max-width:690px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
     .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}.trust div{border:1px solid rgba(16,35,29,.1);border-radius:18px;background:rgba(255,253,248,.78);padding:14px}.trust strong{display:block;font-size:.95rem}.trust span{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
-    .scene{position:relative;min-height:570px;border:1px solid rgba(16,35,29,.1);border-radius:34px;overflow:hidden;background:radial-gradient(circle at 70% 10%,rgba(32,201,151,.16),transparent 22rem),linear-gradient(145deg,#fbfdf9,#eef6f0);box-shadow:var(--shadow);perspective:1100px}
-    .scene-head{position:absolute;left:24px;right:24px;top:22px;display:flex;justify-content:space-between;color:var(--muted);font-size:.82rem;font-weight:850;z-index:5}.scene-head strong{color:var(--ink)}
-    .iso-floor{position:absolute;left:9%;right:9%;top:22%;bottom:18%;border-radius:38px;background:linear-gradient(90deg,rgba(16,35,29,.06) 1px,transparent 1px),linear-gradient(0deg,rgba(16,35,29,.06) 1px,transparent 1px),rgba(255,255,255,.56);background-size:34px 34px;transform:rotateX(61deg) rotateZ(-25deg);box-shadow:0 34px 70px rgba(16,35,29,.13)}
-    .node{position:absolute;z-index:6;width:176px;border:1px solid rgba(16,35,29,.11);border-radius:24px;background:rgba(255,253,248,.96);box-shadow:0 18px 36px rgba(16,35,29,.14);padding:16px;text-align:left;cursor:pointer;transition:transform .18s ease,border-color .18s ease}.node:hover,.node.active{transform:translateY(-7px);border-color:rgba(20,122,90,.48)}.node small{display:block;color:var(--green);font-size:.68rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.node strong{display:block;margin-top:7px;line-height:1.12}.node span{display:block;margin-top:5px;color:var(--muted);font-size:.82rem}
-    .n1{left:7%;top:18%}.n2{right:8%;top:17%}.n3{left:34%;top:26%}.n4{left:12%;bottom:20%}.n5{right:12%;bottom:20%}
-    .core{position:absolute;left:50%;top:49%;z-index:4;width:180px;height:112px;display:grid;place-items:center;border-radius:30px;background:linear-gradient(145deg,#10231d,#1d3b31);color:white;transform:translate(-50%,-50%) rotateX(10deg);box-shadow:0 30px 58px rgba(16,35,29,.28);font-weight:950;text-align:center}
-    .scene-detail{position:absolute;left:24px;right:24px;bottom:20px;z-index:8;display:grid;grid-template-columns:.85fr 1.15fr;gap:16px}.detail-card,.detail-list div{border:1px solid rgba(16,35,29,.1);background:rgba(255,253,248,.94);border-radius:22px;box-shadow:0 14px 30px rgba(16,35,29,.09)}.detail-card{padding:20px}.detail-card small{color:var(--green);font-weight:950;letter-spacing:.1em;text-transform:uppercase}.detail-card h2{margin-top:7px;font-size:1.35rem;line-height:1.08}.detail-card p{margin-top:9px;color:var(--muted)}.detail-list{display:grid;gap:9px}.detail-list div{padding:12px 14px;font-weight:760}
-    section{padding:66px 0}.section-head{max-width:820px;margin-bottom:26px}.label{color:var(--green);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}.title{margin-top:10px;font-size:clamp(1.7rem,3vw,2.65rem);line-height:1.04;letter-spacing:-.035em}.copy{margin-top:12px;color:var(--muted);max-width:760px}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{border:1px solid rgba(16,35,29,.1);border-radius:24px;background:var(--card);padding:24px;box-shadow:0 12px 34px rgba(16,35,29,.08)}.card h3{font-size:1.15rem}.card p{margin-top:10px;color:var(--muted)}.card ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}.card li{display:grid;grid-template-columns:10px 1fr;gap:10px;font-weight:730}.card li::before{content:"";width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--green)}
+    .preview{border:1px solid rgba(16,35,29,.12);border-radius:34px;background:#f1ece3;box-shadow:var(--shadow);overflow:hidden;transform:perspective(1200px) rotateY(-3deg) rotateX(1deg)}.preview-top{min-height:58px;background:#10231d;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 18px}.preview-top strong{letter-spacing:.02em}.preview-top span{color:#bfd4cc;font-size:.84rem;font-weight:780}.preview-body{display:grid;grid-template-columns:150px 1fr;min-height:560px}.preview-side{background:#173027;color:#dce9e3;padding:14px;display:grid;align-content:start;gap:8px}.preview-side button{border:1px solid transparent;border-radius:12px;background:transparent;color:inherit;text-align:left;min-height:38px;padding:0 10px;font-weight:800;cursor:pointer}.preview-side button.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16);color:white}.preview-main{padding:16px;background:#f1ece3;overflow:hidden}.preview-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.preview-head h2{font-size:1.28rem}.preview-head p{color:var(--muted);font-size:.9rem}.pill{display:inline-flex;border-radius:999px;padding:5px 9px;font-size:.74rem;font-weight:900}.green{background:#dbf4e8;color:#0d684c}.red{background:#fee8e5;color:#9f3028}.amber{background:#fff0d7;color:#86520d}.blue{background:#e4f0fb;color:#1f5f92}
+    .preview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.widget{border:1px solid rgba(16,35,29,.1);border-radius:18px;background:#fffdf8;padding:13px;min-height:112px}.widget small{display:block;color:var(--muted);text-transform:uppercase;font-size:.67rem;font-weight:900}.widget strong{display:block;margin-top:5px;font-size:1.22rem}.widget p{margin-top:5px;color:var(--muted);font-size:.86rem}.wide{grid-column:1/-1}.fake-row{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid rgba(16,35,29,.08);border-radius:14px;background:white;padding:10px 12px;margin-top:8px;font-size:.9rem;font-weight:820}.chart{height:92px;border-radius:14px;background:linear-gradient(180deg,#eef9f4,#fff);display:flex;align-items:end;gap:8px;padding:10px;margin-top:10px}.bar{flex:1;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#21a77d,#137a5b);min-height:12px}
+    section{padding:66px 0}.section-head{max-width:820px;margin-bottom:26px}.label{color:var(--green);font-size:.75rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}.title{margin-top:10px;font-size:clamp(1.7rem,3vw,2.65rem);line-height:1.04;letter-spacing:-.035em}.copy{margin-top:12px;color:var(--muted);max-width:760px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{border:1px solid rgba(16,35,29,.1);border-radius:24px;background:var(--card);padding:24px;box-shadow:0 12px 34px rgba(16,35,29,.08)}.card h3{font-size:1.15rem}.card p{margin-top:10px;color:var(--muted)}.card ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}.card li{display:grid;grid-template-columns:10px 1fr;gap:10px;font-weight:730}.card li::before{content:"";width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--green)}
     .demo-band{border:1px solid rgba(16,35,29,.1);border-radius:30px;background:var(--ink);color:white;padding:34px;display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center}.demo-band p{margin-top:10px;color:rgba(255,255,255,.73)}.demo-band .btn{background:white;color:var(--ink)}
     footer{padding:28px 0 38px;color:var(--muted);font-size:.9rem}.foot{display:flex;justify-content:space-between;gap:18px;border-top:1px solid rgba(16,35,29,.1);padding-top:22px}
-    @media(max-width:920px){.hero,.grid3,.demo-band{grid-template-columns:1fr}.links a:not(.btn){display:none}.scene{min-height:760px}.scene-detail{grid-template-columns:1fr}.trust{grid-template-columns:1fr}.n1{left:7%;top:12%}.n2{right:7%;top:21%}.n3{left:28%;top:33%}.n4{left:7%;bottom:35%}.n5{right:7%;bottom:35%}}
-    @media(max-width:560px){.shell{width:min(100% - 22px,1180px)}.hero{padding-top:44px}h1{font-size:clamp(2.05rem,10vw,3.1rem)}.scene{min-height:900px}.node{width:178px}.n1,.n2,.n3,.n4,.n5{left:50%;right:auto}.n1{top:8%;transform:translateX(-50%)}.n2{top:21%;transform:translateX(-50%)}.n3{top:34%;transform:translateX(-50%)}.n4{bottom:43%;transform:translateX(-50%)}.n5{bottom:30%;transform:translateX(-50%)}.node:hover,.node.active{transform:translateX(-50%) translateY(-4px)}.scene-detail{left:14px;right:14px;bottom:14px}.foot{flex-direction:column}}
+    @media(max-width:980px){.hero,.grid3,.demo-band{grid-template-columns:1fr}.links a:not(.btn){display:none}.preview{transform:none}.trust{grid-template-columns:1fr}.preview-body{grid-template-columns:1fr}.preview-side{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:560px){.shell{width:min(100% - 22px,1180px)}.hero{padding-top:44px}h1{font-size:clamp(2.05rem,10vw,3.1rem)}.preview-side{grid-template-columns:1fr 1fr}.preview-grid{grid-template-columns:1fr}.foot{flex-direction:column}.actions .btn,.demo-band .btn{width:100%}}
   </style>
 </head>
 <body>
   <nav class="nav">
     <div class="shell nav-in">
       <a class="brand" href="/">VIKRR</a>
-      <div class="links">
-        <a href="#system">Systém</a>
-        <a href="#process">Proces</a>
-        <a class="btn dark" href="/asset-shield/demo/">Otevřít demo</a>
-      </div>
+      <div class="links"><a href="#realita">Realita systému</a><a href="#process">Nasazení</a><a class="btn dark" href="/asset-shield/demo/">Otevřít demo</a></div>
     </div>
   </nav>
-
   <main>
     <header class="shell hero">
       <div>
         <div class="eyebrow">VIKRR Asset Shield</div>
-        <h1>Provozní systém pro majetek, servis a kontroly.</h1>
-        <p class="lead">Asset Shield propojí karty zařízení, úkoly, servisní zásahy, kontroly, měření, dokumenty a odpovědnosti. Není to ostrá aplikace otevřená z webu. Veřejné demo běží odděleně a používá jen falešná data.</p>
-        <p class="sub">Cílem je, aby člověk v provozu nemusel přemýšlet, kam co zapsat. Záznam patří rovnou k místnosti, stroji nebo zařízení, kterého se týká.</p>
-        <div class="actions">
-          <a class="btn green" href="/asset-shield/demo/">Otevřít veřejné demo</a>
-          <a class="btn" href="#process">Jak se nasazuje</a>
-        </div>
-        <div class="trust">
-          <div><strong>Demo bez rizika</strong><span>žádná produkční data, žádné ostré přístupy</span></div>
-          <div><strong>Instance pro firmu</strong><span>samostatné prostředí až po implementaci</span></div>
-          <div><strong>Auditní stopa</strong><span>doklady, historie, uživatel a čas záznamu</span></div>
-        </div>
+        <h1>CMMS pro provoz, kde se práce děje u strojů.</h1>
+        <p class="lead">Asset Shield spojuje kartotéku majetku, úkoly, převodovky, dataloggery, kontroly, dokumenty a kiosk obsluhy. Záznam se ukládá ke konkrétní místnosti, stroji nebo zařízení, ne do neurčité tabulky.</p>
+        <p class="sub">Veřejné demo je oddělené od ostrých aplikací. Je naplněné falešnými daty, aby si návštěvník mohl systém proklikat bez rizika.</p>
+        <div class="actions"><a class="btn green" href="/asset-shield/demo/">Spustit veřejné demo</a><a class="btn" href="#realita">Co ukazuje</a></div>
+        <div class="trust"><div><strong>Falešná data</strong><span>bez produkční databáze a přístupů</span></div><div><strong>Reálné flow</strong><span>úkol, karta, kontrola, měření, kiosk</span></div><div><strong>Samostatná instance</strong><span>pro firmu až po implementaci</span></div></div>
       </div>
 
-      <div class="scene" id="system" aria-label="Interaktivní mapa modulů Asset Shield">
-        <div class="scene-head"><strong>Klikněte na oblast systému</strong><span>živý model provozu</span></div>
-        <div class="iso-floor" aria-hidden="true"></div>
-        <div class="core">Asset<br>Shield</div>
-        <button class="node n1 active" type="button" data-module="assets"><small>01 Evidence</small><strong>Kartotéka</strong><span>budovy, patra, místnosti, zařízení</span></button>
-        <button class="node n2" type="button" data-module="work"><small>02 Práce</small><strong>Úkoly a servis</strong><span>od hlášení po dokončení</span></button>
-        <button class="node n3" type="button" data-module="data"><small>03 Měření</small><strong>Trendy a záznamy</strong><span>teploty, hodnoty, kontroly</span></button>
-        <button class="node n4" type="button" data-module="kiosk"><small>04 Obsluha</small><strong>Kiosek</strong><span>rychlé zápisy na hale</span></button>
-        <button class="node n5" type="button" data-module="checks"><small>05 Doklad</small><strong>Archiv kontrol</strong><span>dohledatelné výsledky k datu</span></button>
-        <div class="scene-detail">
-          <div class="detail-card"><small id="moduleKicker">01 Evidence</small><h2 id="moduleTitle">Každá věc má svůj rodný list.</h2><p id="moduleText">Zařízení není jen řádek v tabulce. Má umístění, stav, vazby, dokumenty, historii oprav, kontroly a navázané úkoly.</p></div>
-          <div class="detail-list" id="modulePoints"><div>filtr podle budovy, patra, místnosti a typu</div><div>vazby typu převodovka → extruder nebo zařízení → linka</div><div>historie záznamů přímo na kartě zařízení</div></div>
+      <div class="preview" aria-label="Realistický náhled aplikace Asset Shield">
+        <div class="preview-top"><strong>Asset Shield demo</strong><span>Budova D · falešná data</span></div>
+        <div class="preview-body">
+          <div class="preview-side" id="previewNav"></div>
+          <div class="preview-main">
+            <div class="preview-head"><div><h2 id="previewTitle">Dashboard</h2><p id="previewText">Dnešní stav provozu v jedné obrazovce.</p></div><span class="pill green">demo</span></div>
+            <div class="preview-grid" id="previewGrid"></div>
+          </div>
         </div>
       </div>
     </header>
 
-    <section class="shell">
-      <div class="section-head">
-        <div class="label">Co si lze v demu osahat</div>
-        <h2 class="title">Demo je malá falešná továrna, ne statický obrázek.</h2>
-        <p class="copy">Veřejné demo simuluje běžný provoz: otevřené úkoly, stav zařízení, kontrolu místností, převodovky, dataloggery a kiosk. Data jsou připravená jen pro ukázku, takže se dá klikat bez rizika.</p>
-      </div>
+    <section class="shell" id="realita">
+      <div class="section-head"><div class="label">Co se má v demu poznat</div><h2 class="title">Není to slideshow. Je to malý model provozu.</h2><p class="copy">Návštěvník má vidět, že systém drží vazby mezi místem, zařízením, úkolem a dokladem. Proto demo obsahuje falešný extruder, převodovku, datalogger, místnosti, úkoly, kontrolu a kiosk.</p></div>
       <div class="grid3">
-        <article class="card"><h3>Dashboard</h3><p>První pohled na provoz: priorita úkolů, zařízení po termínu, poslední měření a stav kontrol.</p><ul><li>falešné KPI a upozornění</li><li>klikací detail položek</li><li>rychlý přepínač modulů</li></ul></article>
-        <article class="card"><h3>Kartotéka a servis</h3><p>Ukázka vazby mezi místností, strojem, komponentou, úkolem a servisní historií.</p><ul><li>rodný list zařízení</li><li>převodovky a stav výměny</li><li>deník práce u konkrétní věci</li></ul></article>
-        <article class="card"><h3>Kontroly a doklady</h3><p>Zavřená kontrola zůstane jako doklad k datu. Závady se dají převést na práci.</p><ul><li>archiv výsledků</li><li>závady podle místností</li><li>ukázka exportního výstupu</li></ul></article>
+        <article class="card"><h3>Karta zařízení</h3><p>Rodný list ukazuje umístění, stav, navázané úkoly, historii a dokumenty.</p><ul><li>zařízení v konkrétní místnosti</li><li>vazba převodovka → extruder</li><li>historie oprav a měření</li></ul></article>
+        <article class="card"><h3>Kontrola jako doklad</h3><p>Uzavřená kontrola zůstává uložená podle data. Závady se převádějí na práci.</p><ul><li>body podle místností</li><li>stav OK / závada</li><li>exportní výstup pro audit</li></ul></article>
+        <article class="card"><h3>Kiosk obsluhy</h3><p>Obsluha nepíše do složité administrace. Vidí jen rychlé akce podle role.</p><ul><li>nahlášení závady</li><li>zápis teploty</li><li>předání směny</li></ul></article>
       </div>
     </section>
 
     <section class="shell" id="process">
       <div class="demo-band">
-        <div>
-          <div class="label">Bezpečný postup</div>
-          <h2 class="title">Nejdřív demo na čistých datech. Ostrá instance až po implementaci.</h2>
-          <p>Veřejný web nevede do produkční aplikace. Pro firmu se připravuje oddělené prostředí, role, moduly, číselníky, importy a postup nasazení podle provozu.</p>
-        </div>
-        <a class="btn" href="/asset-shield/demo/">Spustit demo</a>
+        <div><div class="label">Bezpečný postup</div><h2 class="title">Nejdřív proklikatelné demo. Ostrá instance až pro konkrétní firmu.</h2><p>Veřejný web nevede do produkční aplikace. Pro firmu se teprve nastavují role, číselníky, importy, moduly, doména a vlastní databázové prostředí.</p></div>
+        <a class="btn" href="/asset-shield/demo/">Otevřít demo</a>
       </div>
     </section>
   </main>
-
-  <footer>
-    <div class="shell foot"><p>&copy; 2026 VIKRR s.r.o.</p><p><a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a> &middot; info@vikrr.com</p></div>
-  </footer>
-
+  <footer><div class="shell foot"><p>&copy; 2026 VIKRR s.r.o.</p><p><a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a> &middot; info@vikrr.com</p></div></footer>
   <script>
-    const modules={assets:{k:"01 Evidence",t:"Každá věc má svůj rodný list.",x:"Zařízení není jen řádek v tabulce. Má umístění, stav, vazby, dokumenty, historii oprav, kontroly a navázané úkoly.",p:["filtr podle budovy, patra, místnosti a typu","vazby typu převodovka → extruder nebo zařízení → linka","historie záznamů přímo na kartě zařízení"]},work:{k:"02 Práce",t:"Porucha se změní na řízený úkol.",x:"Hlášení z kiosku nebo z karty zařízení se uloží jako práce s prioritou, odpovědností a vazbou na konkrétní majetek.",p:["převzetí práce technikem","dokončení s popisem řešení","automatický zápis do historie zařízení"]},data:{k:"03 Měření",t:"Hodnoty mají smysl až v kontextu zařízení.",x:"Teploty, proudy, vlhkost nebo kontrolní body jsou navázané na konkrétní místo. Z jednotlivých záznamů vzniká trend.",p:["poslední hodnota a čas měření","grafy pro kontrolu vývoje","oddělení provozních a auditních záznamů"]},kiosk:{k:"04 Obsluha",t:"Kiosk je záměrně jednoduchý.",x:"Obsluha vidí jen akce podle role. Rychle nahlásí problém, zapíše měření nebo předá informaci údržbě.",p:["minimum kroků na mobilu nebo tabletu","zobrazení jen povolených modulů","záznam uživatele a času"]},checks:{k:"05 Doklad",t:"Kontrola je uložený výsledek k datu.",x:"Provedená kontrola zůstane v archivu. Závada je navázaná na místnost a může založit servisní úkol.",p:["archiv hotových kontrol","závady podle místností","export pro interní audit"]}};
-    const buttons=document.querySelectorAll("[data-module]"),k=document.getElementById("moduleKicker"),t=document.getElementById("moduleTitle"),x=document.getElementById("moduleText"),p=document.getElementById("modulePoints");
-    buttons.forEach(b=>b.addEventListener("click",()=>{const d=modules[b.dataset.module];buttons.forEach(i=>i.classList.toggle("active",i===b));k.textContent=d.k;t.textContent=d.t;x.textContent=d.x;p.innerHTML=d.p.map(v=>`<div>${v}</div>`).join("")}));
+    const screens={
+      dashboard:{title:"Dashboard",text:"Dnešní stav provozu v jedné obrazovce.",cells:[["Otevřené úkoly","3","P1 převodovka"],["Kontroly","2 závady","Budova D"],["Datalogger","5,2 °C","Měřidla"],["Převodovky","1 nepouštět","Extruder 3"],["wide","Převodovka 3: neobvyklý zvuk",'<span class="pill red">P1</span>'],["wide","Kontrola Míchárny I. uzavřena se závadou",'<span class="pill amber">doklad</span>']]},
+      kartoteka:{title:"Kartotéka",text:"Budovy, patra, místnosti a rodné listy.",cells:[["D Výroba","150 položek","1.NP / 2.NP"],["Extrudovna II","Extruder 3, 4","riziko"],["Balírna","kontroly, úkoly","P2"],["Expedice","hmyzolapače","po termínu"],["wide","Rodný list: Extruder 3","Převodovka 3 · úkol WO-2606-014"]]},
+      kontroly:{title:"Kontroly",text:"Kontrola uložená jako výsledek k datu.",cells:[["Kotelna","OK","revizní štítky"],["Míchárna I.","Závada","prasklina u světla"],["Sklad surovin","OK","čistota"],["Balírna","Závada","kryt dopravníku"],["wide","Archiv: Kontrola budovy D · 13. 6. 2026","XLSX / tisk"]] },
+      prevodovky:{title:"Převodovky",text:"Stav, zátěž, teplota a rychlá výměna.",cells:[["Převodovka 1","59 °C · 41 A","v provozu"],["Převodovka 3","74 °C · 55 A","nepouštět"],["Převodovka 5","sklad ND","náhradní kus"],["wide","Nejede → výměna → stará do servisu","servisní stopa"]]},
+      kiosk:{title:"Kiosk",text:"Rychlé zápisy obsluhy bez administrace.",cells:[["Nahlásit závadu","Extruder 3","P1"],["Zapsat teplotu","Datalogger","5,2 °C"],["Předání směny","poznámka","směna"],["wide","Obsluha vidí jen moduly podle role","bez admin nastavení"]]}
+    };
+    const nav=document.getElementById("previewNav"),grid=document.getElementById("previewGrid"),title=document.getElementById("previewTitle"),text=document.getElementById("previewText");
+    function draw(id){const s=screens[id];title.textContent=s.title;text.textContent=s.text;nav.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.id===id));grid.innerHTML=s.cells.map(c=>c[0]==="wide"?`<div class="widget wide"><div class="fake-row"><strong>${c[1]}</strong><span>${c[2]}</span></div></div>`:`<div class="widget"><small>${c[0]}</small><strong>${c[1]}</strong><p>${c[2]}</p>${id==="prevodovky"&&c[0]==="Převodovka 3"?'<div class="chart"><i class="bar" style="height:42px"></i><i class="bar" style="height:58px"></i><i class="bar" style="height:76px"></i><i class="bar" style="height:51px"></i></div>':""}</div>`).join("")}
+    nav.innerHTML=Object.keys(screens).map(id=>`<button data-id="${id}" type="button">${screens[id].title}</button>`).join("");
+    nav.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>draw(b.dataset.id)));draw("dashboard");
   </script>
 </body>
 </html>
