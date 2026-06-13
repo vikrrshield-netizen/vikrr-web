@@ -1,70 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIKRR Asset Shield - CMMS and operational evidence</title>
-  <meta name="description" content="VIKRR Asset Shield is a CMMS and operational evidence platform for assets, work orders, inspections, documents and service history.">
+  <title>VIKRR Asset Shield - servis, kontroly a historie majetku</title>
+  <meta name="description" content="VIKRR Asset Shield pomáhá firmám udržet pořádek v majetku, úkolech, kontrolách, servisu, dokumentech a dokladech pro audit.">
   <meta name="theme-color" content="#10231d">
   <link rel="canonical" href="https://vikrr.com/asset-shield/">
   <style>
     *,*::before,*::after{box-sizing:border-box}*{margin:0}
-    :root{--ink:#10231d;--muted:#62736b;--paper:#f6f0e7;--card:#fffdf8;--line:#ded6ca;--green:#137a5b;--blue:#1f5f99;--red:#b83b2f;--shadow:0 22px 60px rgba(16,35,29,.13)}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f7f1e8,#f5f8f3);line-height:1.55;-webkit-font-smoothing:antialiased}a{text-decoration:none;color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
-    .nav{position:sticky;top:0;z-index:20;background:rgba(246,240,231,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(16,35,29,.09)}.nav-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{font-weight:950;letter-spacing:.06em}.links{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:760}.button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid rgba(16,35,29,.13);background:var(--card);padding:0 18px;font-weight:850}.button.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
-    .hero{padding:76px 0 46px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(380px,1.1fr);gap:38px;align-items:center}.eyebrow{color:var(--green);font-size:.76rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}h1{margin-top:14px;font-size:clamp(2.35rem,5.2vw,4.8rem);line-height:1;letter-spacing:-.04em}.lead{margin-top:20px;max-width:650px;color:#314039;font-size:1.08rem}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-    .ops-map{min-height:470px;position:relative;overflow:hidden;border:1px solid rgba(16,35,29,.11);border-radius:30px;background:linear-gradient(145deg,rgba(19,122,91,.08),rgba(31,95,153,.08)),#fbfdf9;box-shadow:var(--shadow);perspective:980px}.floor{position:absolute;inset:18% 8% 8%;border:1px solid rgba(16,35,29,.08);border-radius:32px;background:linear-gradient(90deg,rgba(16,35,29,.05) 1px,transparent 1px),linear-gradient(0deg,rgba(16,35,29,.05) 1px,transparent 1px),rgba(255,255,255,.5);background-size:34px 34px;transform:rotateX(58deg) rotateZ(-24deg) translateY(12px)}
-    .node{position:absolute;min-width:158px;border:1px solid rgba(16,35,29,.12);border-radius:20px;padding:15px;background:rgba(255,255,255,.95);box-shadow:0 18px 34px rgba(16,35,29,.12);text-align:left;cursor:pointer;transition:.18s ease}.node:hover,.node.active{transform:translateY(-6px);border-color:rgba(19,122,91,.48);box-shadow:0 24px 44px rgba(19,122,91,.2)}.node small{display:block;color:var(--green);font-size:.68rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.node strong{display:block;margin-top:7px;font-size:.98rem;line-height:1.15}.n1{left:9%;top:15%}.n2{right:9%;top:18%}.n3{left:39%;top:39%}.n4{left:18%;bottom:16%}.n5{right:19%;bottom:15%}
-    section{padding:68px 0}.section-head{max-width:760px;margin-bottom:28px}.label{color:var(--green);font-size:.76rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}h2{margin-top:10px;font-size:clamp(1.75rem,3.2vw,2.75rem);line-height:1.04;letter-spacing:-.035em}.copy{margin-top:14px;color:var(--muted);max-width:680px}
-    .split{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:24px}.card{border:1px solid rgba(16,35,29,.1);border-radius:24px;background:var(--card);padding:24px;box-shadow:0 12px 34px rgba(16,35,29,.08)}.feature-list{display:grid;gap:12px}.feature{border:1px solid rgba(16,35,29,.08);border-radius:16px;padding:16px;background:#fbfdfb}.feature strong{display:block}.feature span{display:block;margin-top:4px;color:var(--muted)}
-    .info{border:1px solid rgba(16,35,29,.1);border-radius:28px;padding:28px;background:var(--card);box-shadow:0 12px 34px rgba(16,35,29,.08)}.info small{color:var(--green);font-weight:950;letter-spacing:.1em;text-transform:uppercase}.info h3{margin-top:10px;font-size:1.6rem;line-height:1.06}.info p{margin-top:14px;color:var(--muted)}.info ul{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:9px}.info li{display:grid;grid-template-columns:9px 1fr;gap:10px;font-weight:730}.info li::before{content:"";width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--green)}
+    :root{--ink:#10231d;--ink2:#263b33;--muted:#617169;--paper:#f4eee4;--card:#fffdf8;--line:#ddd4c7;--green:#137a5b;--green2:#20c997;--blue:#1f5f99;--amber:#c98212;--red:#b83b2f;--shadow:0 24px 70px rgba(16,35,29,.14)}
+    html{scroll-behavior:smooth;background:var(--paper)}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 80% 4%,rgba(32,201,151,.16),transparent 30rem),linear-gradient(180deg,#f7f1e8 0%,#fbf8f1 42%,#eef5ef 100%);line-height:1.55;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
+    .nav{position:sticky;top:0;z-index:30;background:rgba(244,238,228,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(16,35,29,.09)}
+    .nav-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{font-weight:950;letter-spacing:.06em}.links{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:760}
+    .button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid rgba(16,35,29,.13);background:var(--card);padding:0 18px;font-weight:850}.button.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .hero{padding:72px 0 50px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);gap:42px;align-items:center}.eyebrow{color:var(--green);font-size:.76rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}
+    h1{margin-top:14px;font-size:clamp(2.35rem,5vw,4.7rem);line-height:1;letter-spacing:-.04em}.lead{margin-top:20px;max-width:680px;color:#314039;font-size:1.08rem}.sublead{margin-top:14px;max-width:680px;color:var(--muted)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .proofs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}.proof{border:1px solid rgba(16,35,29,.1);border-radius:18px;background:rgba(255,253,248,.72);padding:14px}.proof strong{display:block;font-size:.95rem}.proof span{display:block;margin-top:4px;color:var(--muted);font-size:.86rem}
+
+    .interactive{min-height:590px;position:relative;overflow:hidden;border:1px solid rgba(16,35,29,.11);border-radius:34px;background:linear-gradient(145deg,rgba(19,122,91,.08),rgba(31,95,153,.08)),#fbfdf9;box-shadow:var(--shadow);perspective:1100px}
+    .map-head{position:absolute;left:24px;right:24px;top:22px;display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:.82rem;font-weight:850;z-index:4}.map-head strong{color:var(--ink)}
+    .floor{position:absolute;left:8%;right:8%;top:25%;bottom:8%;border:1px solid rgba(16,35,29,.08);border-radius:34px;background:linear-gradient(90deg,rgba(16,35,29,.05) 1px,transparent 1px),linear-gradient(0deg,rgba(16,35,29,.05) 1px,transparent 1px),rgba(255,255,255,.54);background-size:34px 34px;transform:rotateX(61deg) rotateZ(-25deg) translateY(8px);box-shadow:0 36px 70px rgba(16,35,29,.12)}
+    .hub{position:absolute;left:50%;top:47%;width:158px;height:96px;display:grid;place-items:center;border:1px solid rgba(16,35,29,.12);border-radius:26px;background:linear-gradient(145deg,#10231d,#1d3b31);color:white;box-shadow:0 28px 54px rgba(16,35,29,.24);transform:translate(-50%,-50%) rotateX(12deg);font-weight:950;text-align:center;z-index:3}
+    .module{position:absolute;min-width:166px;border:1px solid rgba(16,35,29,.12);border-radius:22px;padding:16px;background:rgba(255,253,248,.96);box-shadow:0 18px 36px rgba(16,35,29,.12);text-align:left;cursor:pointer;color:var(--ink);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;z-index:5}
+    .module:hover,.module.active{transform:translateY(-8px) scale(1.02);border-color:rgba(19,122,91,.5);box-shadow:0 26px 48px rgba(19,122,91,.22)}.module small{display:block;color:var(--green);font-size:.68rem;font-weight:950;text-transform:uppercase;letter-spacing:.09em}.module strong{display:block;margin-top:8px;font-size:1rem;line-height:1.12}.module span{display:block;margin-top:5px;color:var(--muted);font-size:.82rem}
+    .m-assets{left:8%;top:17%}.m-work{right:8%;top:18%}.m-data{left:34%;top:23%}.m-kiosk{left:13%;bottom:14%}.m-checks{right:13%;bottom:14%}
+    .detail{position:absolute;left:24px;right:24px;bottom:22px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:18px;z-index:8}.detail-card{border:1px solid rgba(16,35,29,.1);border-radius:24px;background:rgba(255,253,248,.94);padding:22px;box-shadow:0 16px 34px rgba(16,35,29,.1)}.detail-card small{color:var(--green);font-weight:950;letter-spacing:.1em;text-transform:uppercase}.detail-card h2{margin-top:8px;font-size:1.45rem;line-height:1.08}.detail-card p{margin-top:10px;color:var(--muted)}.detail-list{display:grid;gap:10px}.detail-list div{border:1px solid rgba(16,35,29,.08);border-radius:16px;background:white;padding:12px 14px;font-weight:760;color:var(--ink2)}
+
+    section{padding:68px 0}.section-head{max-width:820px;margin-bottom:28px}.label{color:var(--green);font-size:.76rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}h3.section-title{margin-top:10px;font-size:clamp(1.75rem,3.2vw,2.75rem);line-height:1.04;letter-spacing:-.035em}.copy{margin-top:14px;color:var(--muted);max-width:760px}
+    .story{display:grid;grid-template-columns:1fr 1fr;gap:18px}.story-card{border:1px solid rgba(16,35,29,.1);border-radius:24px;background:var(--card);padding:24px;box-shadow:0 12px 34px rgba(16,35,29,.08)}.story-card h4{font-size:1.2rem}.story-card p{margin-top:10px;color:var(--muted)}.story-card ul{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:10px}.story-card li{display:grid;grid-template-columns:10px 1fr;gap:10px;font-weight:730}.story-card li::before{content:"";width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--green)}
+    .contact{border:1px solid rgba(16,35,29,.1);border-radius:28px;background:var(--ink);color:white;padding:34px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}.contact p{margin-top:10px;color:rgba(255,255,255,.72)}.contact .button{background:white;color:var(--ink)}
     footer{padding:28px 0 38px;color:var(--muted);font-size:.9rem}.footer-inner{display:flex;justify-content:space-between;border-top:1px solid rgba(16,35,29,.1);padding-top:22px}
-    @media(max-width:880px){.hero,.split{grid-template-columns:1fr}.links a:not(.button){display:none}.ops-map{min-height:520px}.n1{left:7%;top:10%}.n2{right:7%;top:23%}.n3{left:24%;top:42%}.n4{left:7%;bottom:13%}.n5{right:7%;bottom:8%}}
-    @media(max-width:560px){.shell{width:min(100% - 22px,1180px)}.hero{padding-top:46px}h1{font-size:clamp(2.1rem,11vw,3.2rem)}.ops-map{min-height:620px}.node{min-width:150px;max-width:170px}.n1,.n2,.n3,.n4,.n5{left:50%;right:auto}.n1{top:7%;transform:translateX(-50%)}.n2{top:24%;transform:translateX(-50%)}.n3{top:41%;transform:translateX(-50%)}.n4{bottom:24%;transform:translateX(-50%)}.n5{bottom:7%;transform:translateX(-50%)}.node:hover,.node.active{transform:translateX(-50%) translateY(-4px)}.footer-inner{flex-direction:column;gap:10px}}
+    @media(max-width:920px){.hero,.story,.contact{grid-template-columns:1fr}.links a:not(.button){display:none}.interactive{min-height:760px}.detail{grid-template-columns:1fr}.m-assets{left:7%;top:12%}.m-work{right:7%;top:21%}.m-data{left:28%;top:33%}.m-kiosk{left:7%;bottom:35%}.m-checks{right:7%;bottom:35%}.proofs{grid-template-columns:1fr}}
+    @media(max-width:560px){.shell{width:min(100% - 22px,1180px)}.hero{padding-top:46px}h1{font-size:clamp(2.1rem,11vw,3.2rem)}.interactive{min-height:900px}.module{min-width:160px;max-width:182px}.m-assets,.m-work,.m-data,.m-kiosk,.m-checks{left:50%;right:auto}.m-assets{top:9%;transform:translateX(-50%)}.m-work{top:22%;transform:translateX(-50%)}.m-data{top:35%;transform:translateX(-50%)}.m-kiosk{bottom:43%;transform:translateX(-50%)}.m-checks{bottom:30%;transform:translateX(-50%)}.module:hover,.module.active{transform:translateX(-50%) translateY(-4px)}.detail{bottom:16px;left:14px;right:14px}.footer-inner{flex-direction:column;gap:10px}}
   </style>
 </head>
 <body>
-  <nav class="nav"><div class="shell nav-inner"><a class="brand" href="/">VIKRR</a><div class="links"><a href="/asset-shield/">Asset Shield</a><a href="/takt/">TAKT</a><a class="button dark" href="#contact">Request demo</a></div></div></nav>
+  <nav class="nav">
+    <div class="shell nav-inner">
+      <a class="brand" href="/">VIKRR</a>
+      <div class="links"><a href="/asset-shield/">Asset Shield</a><a href="/takt/">TAKT</a><a class="button dark" href="#contact">Demo</a></div>
+    </div>
+  </nav>
   <main>
     <header class="shell hero">
       <div>
         <div class="eyebrow">VIKRR Asset Shield</div>
-        <h1>Operational control for assets, work and evidence.</h1>
-        <p class="lead">A CMMS and operational evidence platform for teams that need equipment history, work orders, inspections, documents and review-ready records in one system. Customer instances are deployed separately for each company.</p>
-        <div class="hero-actions"><a class="button dark" href="#contact">Request demo</a><a class="button" href="#contact">Discuss implementation</a></div>
+        <h1>Pořádek v majetku, servisu a kontrolách bez papírů.</h1>
+        <p class="lead">Asset Shield je systém pro firmy, kde se denně řeší stroje, zařízení, úkoly, kontroly, dokumenty a odpovědnost. Nejde o obecný seznam úkolů. Je to provozní evidence navázaná na konkrétní místnosti, stroje a lidi.</p>
+        <p class="sublead">Veřejná stránka slouží jen pro představení a demo. Ostré firemní instance jsou oddělené a připravují se samostatně pro každou firmu.</p>
+        <div class="actions"><a class="button dark" href="#contact">Chci vidět demo</a><a class="button" href="#how">Jak to funguje</a></div>
+        <div class="proofs">
+          <div class="proof"><strong>Majetek</strong><span>karty zařízení, vazby, dokumenty</span></div>
+          <div class="proof"><strong>Práce</strong><span>úkoly, poruchy, opravy, deník</span></div>
+          <div class="proof"><strong>Doklady</strong><span>kontroly, historie, exporty</span></div>
+        </div>
       </div>
-      <div class="ops-map" aria-label="Interactive Asset Shield map">
+
+      <div class="interactive" aria-label="Interaktivní mapa Asset Shield modulů">
+        <div class="map-head"><strong>Klikněte na oblast</strong><span>Asset Shield v praxi</span></div>
         <div class="floor" aria-hidden="true"></div>
-        <button class="node n1 active" type="button" data-module="assets"><small>01 Core</small><strong>Asset cards</strong></button>
-        <button class="node n2" type="button" data-module="work"><small>02 Flow</small><strong>Work orders</strong></button>
-        <button class="node n3" type="button" data-module="data"><small>03 Data</small><strong>Live records</strong></button>
-        <button class="node n4" type="button" data-module="kiosk"><small>04 Floor</small><strong>Operator kiosk</strong></button>
-        <button class="node n5" type="button" data-module="checks"><small>05 Review</small><strong>Inspection archive</strong></button>
+        <div class="hub">Asset<br>Shield</div>
+        <button class="module m-assets active" type="button" data-module="assets"><small>01 Evidence</small><strong>Karty majetku</strong><span>co kde je a co se s tím dělo</span></button>
+        <button class="module m-work" type="button" data-module="work"><small>02 Servis</small><strong>Úkoly a opravy</strong><span>od hlášení po uzavření</span></button>
+        <button class="module m-data" type="button" data-module="data"><small>03 Měření</small><strong>Záznamy a trendy</strong><span>teploty, hodnoty, kontroly</span></button>
+        <button class="module m-kiosk" type="button" data-module="kiosk"><small>04 Provoz</small><strong>Kiosek obsluhy</strong><span>rychlé hlášení bez administrace</span></button>
+        <button class="module m-checks" type="button" data-module="checks"><small>05 Doklad</small><strong>Kontroly a archiv</strong><span>co bylo provedeno a kdy</span></button>
+        <div class="detail">
+          <div class="detail-card"><small id="moduleKicker">01 Evidence</small><h2 id="moduleTitle">Každé zařízení má vlastní rodný list.</h2><p id="moduleText">U zařízení vidíte umístění, stav, dokumenty, vztahy, úkoly, opravy a historii. Když se něco pokazí, nezůstane to jen v hlavě technika nebo ve zprávě v telefonu.</p></div>
+          <div class="detail-list" id="modulePoints"><div>Budovy, patra, místnosti, stroje a zařízení</div><div>Vazby mezi stroji, komponentami a místy</div><div>Historie oprav, kontrol a dokumentů na jednom místě</div></div>
+        </div>
       </div>
     </header>
 
-    <section class="shell">
-      <div class="section-head"><div class="label">What it does</div><h2>From issue to record without losing context.</h2><p class="copy">Asset Shield connects operational work into one traceable chain: report, task, asset card, document, inspection and export.</p></div>
-      <div class="split">
-        <aside class="info" aria-live="polite"><small id="moduleKicker">01 Core module</small><h3 id="moduleTitle">Asset cards keep the full equipment story.</h3><p id="moduleText">Every asset has status, location, documents, relations, tasks, inspections and service history in one place.</p><ul id="modulePoints"><li>Room, machine and device hierarchy</li><li>Documents, links and assigned widgets</li><li>History visible without spreadsheet hunting</li></ul></aside>
-        <div class="card feature-list">
-          <div class="feature"><strong>Asset register</strong><span>Rooms, machines and devices with relationships, documents and status.</span></div>
-          <div class="feature"><strong>Work management</strong><span>Issue reporting, priorities, ownership, resolution and history.</span></div>
-          <div class="feature"><strong>Inspection records</strong><span>Dated checks, findings, follow-up tasks and exportable evidence.</span></div>
-          <div class="feature"><strong>Role-based kiosk</strong><span>Fast actions for operators without exposing admin complexity.</span></div>
-          <div class="feature"><strong>Separate company instance</strong><span>Each deployment is configured as an isolated application for the customer, not a shared public login from this website.</span></div>
-        </div>
+    <section class="shell" id="how">
+      <div class="section-head"><div class="label">Jak to pomáhá</div><h3 class="section-title">Méně hledání. Více doložitelných záznamů.</h3><p class="copy">Cílem není přidat další administrativu. Cílem je, aby se běžná práce sama zapisovala do historie majetku a aby bylo později jasné, kdo co nahlásil, kdo to opravil, kdy proběhla kontrola a jaký doklad z toho vznikl.</p></div>
+      <div class="story">
+        <article class="story-card"><h4>Pro provoz</h4><p>Obsluha nemusí hledat správný formulář. V kiosku vidí jen akce, které se jí týkají.</p><ul><li>rychlé hlášení poruchy</li><li>zápisy měření a kontrol</li><li>předání informace údržbě</li></ul></article>
+        <article class="story-card"><h4>Pro údržbu a vedení</h4><p>Údržba vidí práci podle priority a vedení má historii, která se dá otevřít i po měsících.</p><ul><li>úkol navázaný na konkrétní zařízení</li><li>oprava uložená v deníku práce</li><li>export kontrol a záznamů pro audit</li></ul></article>
       </div>
     </section>
+
     <section class="shell" id="contact">
-      <div class="section-head"><div class="label">Demo access</div><h2>Request a demo or implementation discussion.</h2><p class="copy">Send the product name and your company context to <strong>info@vikrr.com</strong>. Production instances are configured separately and are not opened from the public website.</p></div>
+      <div class="contact"><div><div class="label">Demo a implementace</div><h3 class="section-title">Nejdřív ukázka na čistých datech. Potom samostatná instance pro firmu.</h3><p>Napište na <strong>info@vikrr.com</strong>. Veřejný web neotevírá ostrou aplikaci a neobsahuje produkční přístupy.</p></div><a class="button" href="/">Zpět na VIKRR</a></div>
     </section>
   </main>
   <footer><div class="shell footer-inner"><p>&copy; 2026 VIKRR s.r.o.</p><p><a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></p></div></footer>
   <script>
-    const modules={assets:{k:"01 Core module",t:"Asset cards keep the full equipment story.",x:"Every asset has status, location, documents, relations, tasks, inspections and service history in one place.",p:["Room, machine and device hierarchy","Documents, links and assigned widgets","History visible without spreadsheet hunting"]},work:{k:"02 Work flow",t:"Work orders connect issues to action.",x:"Reported issues become assigned work with priority, ownership, resolution notes and traceable closure.",p:["Fault reporting from kiosk or office","Technician ownership and status","Resolution linked back to the asset"]},data:{k:"03 Live records",t:"Operational readings become usable evidence.",x:"Sensor checks, measurements and operational context can be stored against the asset and reviewed later.",p:["Dated values and responsible user","Trend visibility for recurring issues","Evidence ready for review"]},kiosk:{k:"04 Floor interface",t:"Operators see only the actions they need.",x:"The kiosk keeps reporting fast and role-based without exposing admin settings or back-office screens.",p:["Fast problem reporting","Role-specific modules","Mobile and kiosk friendly controls"]},checks:{k:"05 Review layer",t:"Inspections close as dated records.",x:"Checks, findings and follow-up tasks are grouped into records that can be opened, exported and reviewed.",p:["Closed inspection archive","Findings connected to tasks","XLSX and print-ready evidence"]}};
+    const modules={assets:{k:"01 Evidence",t:"Každé zařízení má vlastní rodný list.",x:"U zařízení vidíte umístění, stav, dokumenty, vztahy, úkoly, opravy a historii. Když se něco pokazí, nezůstane to jen v hlavě technika nebo ve zprávě v telefonu.",p:["Budovy, patra, místnosti, stroje a zařízení","Vazby mezi stroji, komponentami a místy","Historie oprav, kontrol a dokumentů na jednom místě"]},work:{k:"02 Servis",t:"Porucha se změní na práci, ne na ztracenou poznámku.",x:"Hlášení z provozu se uloží jako úkol s prioritou, odpovědnou osobou a návazností na konkrétní kartu zařízení. Po dokončení zůstane výsledek v historii.",p:["rychlé hlášení závady","převzetí a dokončení úkolu","oprava propsaná zpět na kartu zařízení"]},data:{k:"03 Měření",t:"Měření a záznamy dávají smysl až v kontextu.",x:"Teplota, stav, poznámka nebo kontrola nejsou samostatné řádky v tabulce. Patří ke konkrétnímu místu, stroji nebo zařízení, aby z nich později šel vyčíst trend.",p:["zápisy měření s časem a uživatelem","trendy a poslední hodnoty","navázání na zařízení a provozní situaci"]},kiosk:{k:"04 Provoz",t:"Kiosek je jednoduchý, protože nemá nahrazovat kancelář.",x:"Obsluha potřebuje rychle zapsat problém, měření nebo předání směny. Nepotřebuje vidět nastavení systému ani moduly, které se jí netýkají.",p:["role určují, co člověk vidí","minimum kroků pro běžný zápis","mobilní a kiosk ovládání"]},checks:{k:"05 Doklad",t:"Kontrola má být dohledatelný doklad k datu.",x:"Uzavřená kontrola zůstane uložená podle data. Závady z kontroly se mohou změnit na úkoly a výsledek jde později otevřít nebo exportovat.",p:["archiv hotových kontrol","závady navázané na místnost","XLSX a tiskový výstup"]}};
     const buttons=document.querySelectorAll("[data-module]"),k=document.getElementById("moduleKicker"),t=document.getElementById("moduleTitle"),x=document.getElementById("moduleText"),p=document.getElementById("modulePoints");
-    buttons.forEach(b=>b.addEventListener("click",()=>{const d=modules[b.dataset.module];if(!d)return;buttons.forEach(i=>i.classList.toggle("active",i===b));k.textContent=d.k;t.textContent=d.t;x.textContent=d.x;p.innerHTML=d.p.map(v=>`<li>${v}</li>`).join("")}));
+    buttons.forEach(b=>b.addEventListener("click",()=>{const d=modules[b.dataset.module];if(!d)return;buttons.forEach(i=>i.classList.toggle("active",i===b));k.textContent=d.k;t.textContent=d.t;x.textContent=d.x;p.innerHTML=d.p.map(v=>`<div>${v}</div>`).join("")}));
   </script>
 </body>
 </html>
