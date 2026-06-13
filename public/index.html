@@ -276,6 +276,45 @@
 
     section { padding: 74px 0; }
 
+    .service-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid rgba(16, 35, 29, 0.1);
+      border-radius: 24px;
+      background: rgba(16, 35, 29, 0.1);
+      box-shadow: 0 12px 34px rgba(16, 35, 29, 0.08);
+    }
+
+    .service-tile {
+      min-height: 210px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.86);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .service-number {
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    .service-tile h3 {
+      margin-top: 32px;
+      font-size: 1.15rem;
+      line-height: 1.15;
+    }
+
+    .service-tile p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
     .section-head {
       max-width: 760px;
       margin-bottom: 30px;
@@ -447,7 +486,7 @@
     @media (max-width: 900px) {
       .hero, .deep-grid, .cta { grid-template-columns: 1fr; }
       .hero { padding-top: 54px; }
-      .product-grid, .trust-band, .contact-grid { grid-template-columns: 1fr; }
+      .product-grid, .trust-band, .contact-grid, .service-strip { grid-template-columns: 1fr; }
       .nav-links a:not(.button) { display: none; }
       .cta { padding: 28px; }
     }
@@ -531,6 +570,39 @@
         </div>
       </div>
     </header>
+
+    <section class="site-shell" aria-label="VIKRR service spectrum">
+      <div class="service-strip">
+        <article class="service-tile">
+          <div class="service-number">01</div>
+          <div>
+            <h3>Asset operations</h3>
+            <p>Register, history, tasks and service records for equipment-heavy teams.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <div class="service-number">02</div>
+          <div>
+            <h3>Compliance evidence</h3>
+            <p>Dated records, checklists, exports and responsibility trails for review.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <div class="service-number">03</div>
+          <div>
+            <h3>Planning workflows</h3>
+            <p>Simple operational planning built around real teams, shifts and assets.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <div class="service-number">04</div>
+          <div>
+            <h3>Health intelligence</h3>
+            <p>Personal nutrition and routine support through TAKT.</p>
+          </div>
+        </article>
+      </div>
+    </section>
 
     <section class="site-shell" id="products">
       <div class="section-head">
