@@ -100,8 +100,58 @@
     .tag.red{background:#fde8e4;color:#a4332a}.tag.amber{background:#fff0d6;color:#86530c}.tag.green{background:#d8f3e7;color:#0c6a4d}
     .chart{height:84px;border-radius:14px;background:linear-gradient(180deg,#eef9f4,#fff);display:flex;align-items:flex-end;gap:7px;padding:10px;border:1px solid rgba(16,24,20,.07)}
     .bar{flex:1;border-radius:7px 7px 0 0;background:linear-gradient(180deg,var(--green-bright),var(--green))}
+    /* ── device cluster: notebook (PC) + tablet showing the real app ── */
+    .devices{position:relative;width:100%;max-width:520px;margin:0 auto}
+    .laptop{position:relative;z-index:1}
+    .laptop-screen{position:relative;background:#0f1713;padding:11px 9px 9px;border-radius:16px 16px 6px 6px;box-shadow:var(--shadow-l)}
+    .laptop-screen::before{content:"";position:absolute;top:4px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#33433a}
+    .laptop-screen .app{border-radius:9px;overflow:hidden}
+    .laptop-base{height:13px;margin:0 -9%;background:linear-gradient(#d8d0c2,#bcb3a3);border-radius:0 0 16px 16px;box-shadow:0 18px 30px rgba(16,24,20,.22)}
+    .laptop-base::after{content:"";display:block;width:96px;height:6px;margin:0 auto;background:rgba(16,24,20,.16);border-radius:0 0 8px 8px}
+    .app{background:#f1ece3}
+    .app-top{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:#10231d;color:#fff}
+    .app-top b{font-size:.8rem;letter-spacing:.01em}.app-top span{font-size:.66rem;color:#bcd2c9;font-weight:600}
+    .app-brand{display:flex;align-items:center;gap:7px;font-size:.8rem;font-weight:800}
+    .app-brand i{width:7px;height:7px;border-radius:50%;background:var(--green-bright);box-shadow:0 0 0 3px rgba(33,167,125,.25)}
+    .app-body{padding:12px;display:grid;gap:9px;align-content:start}
+    .app-lbl{font-size:.58rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+    .kpis4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .kpis4 .kpi{padding:9px 8px;border-radius:12px}
+    .kpis4 .kpi b{display:block;font-size:1.15rem;letter-spacing:-.02em}
+    .kpis4 .kpi small{display:block;margin-top:2px;font-size:.56rem;line-height:1.15;text-transform:none;letter-spacing:0;font-weight:600;color:var(--muted)}
+    .exc{border:1px solid rgba(16,24,20,.1);border-radius:14px;background:#fff;padding:11px}
+    .exc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .exc-name{display:flex;align-items:center;gap:7px;font-weight:800;font-size:.86rem}
+    .badge{font-size:.58rem;font-weight:800;color:#0c6a4d;background:#d8f3e7;padding:3px 8px;border-radius:999px}
+    .exc-temp{font-weight:900;color:var(--green);font-size:1.05rem;font-variant-numeric:tabular-nums}
+    .exc-sub{color:var(--muted);font-size:.72rem;margin-top:4px}
+    .exc-sub b{color:var(--ink);font-weight:800}
+    .exc-chart{width:100%;height:52px;display:block;margin-top:6px}
+    .exc-chart polyline{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+    .exc-chart .ln-t{stroke:#1f6fb2;stroke-dasharray:4 7;animation:dashflow 5.5s linear infinite}
+    .exc-chart .ln-l{stroke:#e08a2b}
+    @keyframes dashflow{to{stroke-dashoffset:-220}}
+    .exc-tabs{display:flex;gap:5px;margin-top:9px}
+    .exc-tabs span{flex:1;text-align:center;font-size:.66rem;font-weight:700;color:var(--soft);background:#f3efe7;border:1px solid rgba(16,24,20,.07);border-radius:8px;padding:5px 4px}
+    .exc-tabs span.active{background:#e6f3ec;color:var(--green);border-color:rgba(19,122,91,.25)}
+    .tablet{position:absolute;right:-7%;bottom:-13%;width:33%;min-width:118px;z-index:3;transform:rotate(3.5deg)}
+    .tablet-screen{background:#0f1713;padding:7px;border-radius:20px;box-shadow:var(--shadow-l)}
+    .tablet-screen .kiosk{border-radius:13px;overflow:hidden}
+    .kiosk{background:#10231d;color:#fff;padding:12px;display:grid;gap:8px;align-content:start;min-height:212px}
+    .kiosk-top{font-size:.6rem;color:#9ec4b6;text-transform:uppercase;letter-spacing:.1em;font-weight:800;margin-bottom:2px}
+    .kbtn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;border-radius:11px;padding:9px 11px;font-weight:700;font-size:.74rem;text-align:left;font-family:inherit}
+    .kbtn.active{background:var(--green);border-color:var(--green);animation:kpulse 2.4s ease-in-out infinite}
+    @keyframes kpulse{0%,100%{box-shadow:0 0 0 0 rgba(33,167,125,.45)}50%{box-shadow:0 0 0 9px rgba(33,167,125,0)}}
+    /* live operation: flowing chart bars */
+    .chart.live .bar{transform-origin:bottom;animation:barflow 2.8s ease-in-out infinite}
+    .chart.live .bar:nth-child(2){animation-delay:.18s}.chart.live .bar:nth-child(3){animation-delay:.36s}.chart.live .bar:nth-child(4){animation-delay:.54s}.chart.live .bar:nth-child(5){animation-delay:.72s}.chart.live .bar:nth-child(6){animation-delay:.9s}
+    @keyframes barflow{0%,100%{transform:scaleY(.7);opacity:.82}50%{transform:scaleY(1);opacity:1}}
+    /* reposition floating chips around the device cluster */
+    .chip.one{top:-18px;left:-22px;right:auto;bottom:auto}
+    .chip.two{top:40%;left:-34px;right:auto;bottom:auto}
+    .chip.three{bottom:-14px;left:8%;right:auto;top:auto}
     /* floating chips at depth */
-    .chip{position:absolute;display:flex;align-items:center;gap:8px;background:#fffdf8;border:1px solid rgba(16,24,20,.1);box-shadow:var(--shadow-m);border-radius:14px;padding:10px 13px;font-weight:700;font-size:.85rem}
+    .chip{position:absolute;width:max-content;max-width:220px;white-space:nowrap;display:flex;align-items:center;gap:8px;background:#fffdf8;border:1px solid rgba(16,24,20,.1);box-shadow:var(--shadow-m);border-radius:14px;padding:10px 13px;font-weight:700;font-size:.85rem}
     .chip .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:.8rem;color:#fff}
     .chip.one{top:-26px;left:-30px;transform:translateZ(70px)}
     .chip.two{bottom:42px;right:-34px;transform:translateZ(95px)}
@@ -235,24 +285,51 @@
         <canvas class="data-canvas" id="dataCanvas"></canvas>
         <div class="stage" id="stage">
           <div class="glow"></div>
-          <div class="panel">
-            <div class="panel-top"><b>Asset Shield</b><span>Budova D · demo data</span></div>
-            <div class="panel-body">
-              <div class="kpis">
-                <div class="kpi"><small>Otevřené úkoly</small><b>3</b><i>P1 převodovka</i></div>
-                <div class="kpi"><small>Kontroly dnes</small><b>2</b><i>1 závada</i></div>
+          <div class="devices">
+            <div class="laptop">
+              <div class="laptop-screen">
+                <div class="app">
+                  <div class="app-top">
+                    <span class="app-brand"><i></i>Asset Shield</span>
+                    <span>Dobré ráno, Vilem</span>
+                  </div>
+                  <div class="app-body">
+                    <div class="app-lbl">Denní provoz</div>
+                    <div class="kpis kpis4">
+                      <div class="kpi"><b>34</b><small>Otevřené úkoly</small></div>
+                      <div class="kpi"><b>0</b><small>Po termínu</small></div>
+                      <div class="kpi"><b>0</b><small>Deník prací</small></div>
+                      <div class="kpi"><b>0</b><small>Závady dnes</small></div>
+                    </div>
+                    <div class="exc">
+                      <div class="exc-top">
+                        <span class="exc-name"><span class="badge">V provozu</span> Extruder 2</span>
+                        <span class="exc-temp" id="liveTemp">55 °C</span>
+                      </div>
+                      <div class="exc-sub">Převodovka 2 · STR_074 · zátěž <b>40 A</b></div>
+                      <svg class="exc-chart" viewBox="0 0 200 54" preserveAspectRatio="none" aria-hidden="true">
+                        <polyline class="ln-t" points="0,38 33,26 66,30 100,16 133,28 166,13 200,21"/>
+                        <polyline class="ln-l" points="0,45 33,41 66,47 100,35 133,43 166,39 200,45"/>
+                      </svg>
+                      <div class="exc-tabs"><span class="active">Teplota</span><span>Karta</span><span>Servis</span></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="row"><span>Převodovka 3 · neobvyklý zvuk</span><span class="tag red">P1</span></div>
-              <div class="row"><span>Kontrola Míchárny I. uzavřena</span><span class="tag amber">doklad</span></div>
-              <div class="chart">
-                <i class="bar" style="height:38%"></i><i class="bar" style="height:62%"></i>
-                <i class="bar" style="height:48%"></i><i class="bar" style="height:80%"></i>
-                <i class="bar" style="height:56%"></i><i class="bar" style="height:71%"></i>
+              <div class="laptop-base"></div>
+            </div>
+            <div class="tablet">
+              <div class="tablet-screen">
+                <div class="kiosk">
+                  <div class="kiosk-top">Kiosk · obsluha</div>
+                  <button class="kbtn active" type="button">Nahlásit poruchu</button>
+                  <button class="kbtn" type="button">Zapsat práci</button>
+                  <button class="kbtn" type="button">Kontroly</button>
+                </div>
               </div>
             </div>
           </div>
           <div class="chip one"><span class="ic" style="background:var(--green)">✓</span> Audit-ready</div>
-          <div class="chip two"><span class="ic" style="background:var(--blue)">°C</span> 5,2 °C datalogger</div>
           <div class="chip three"><span class="ic" style="background:var(--ink)">QR</span> Rodný list zařízení</div>
         </div>
       </div>
@@ -420,6 +497,19 @@
       }
       resize(); seed(); requestAnimationFrame(frame);
       var rz=null; window.addEventListener('resize',function(){ if(rz)clearTimeout(rz); rz=setTimeout(function(){resize();seed();},150); });
+    }
+
+    /* ── live operation: ticking sensor + batch lifecycle ── */
+    if(!reduce){
+      var temps=['54 °C','55 °C','56 °C','55 °C','57 °C','55 °C'];
+      var tEl=document.getElementById('liveTemp'), ti=0;
+      if(tEl) setInterval(function(){ ti=(ti+1)%temps.length; tEl.textContent=temps[ti]; }, 1900);
+      var batches=[['EX-2606-014','aktivní','tag green'],['EX-2606-015','draft','tag amber'],['EX-2606-016','aktivní','tag green']];
+      var bn=document.getElementById('batchName'), bt=document.getElementById('batchTag'), bi=0;
+      if(bn&&bt) setInterval(function(){
+        bi=(bi+1)%batches.length;
+        bn.textContent=batches[bi][0]; bt.textContent=batches[bi][1]; bt.className=batches[bi][2];
+      }, 2700);
     }
   })();
   </script>
