@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VIKRR | Provozní software, který drží souvislosti</title>
-  <meta name="description" content="VIKRR staví provozní software pro reálnou práci. Asset Shield řídí majetek, servis a kontrolní doklady ve výrobě. TAKT drží osobní rytmus, jídlo a návyky. Vyzkoušejte oddělené demo s falešnými daty.">
-  <meta name="theme-color" content="#101814">
+  <meta name="description" content="VIKRR staví provozní software pro reálnou práci. Provoz 360 řídí majetek, servis a kontrolní doklady ve výrobě. TAKT drží osobní rytmus, jídlo a návyky. Vyzkoušejte oddělené demo s falešnými daty.">
+  <meta name="theme-color" content="#070b11">
   <link rel="canonical" href="https://vikrr.com/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:title" content="VIKRR | Provozní software, který drží souvislosti">
-  <meta property="og:description" content="Asset Shield pro firemní provoz, TAKT pro osobní rytmus. Dva oddělené produkty, jedna značka. Proklikatelné demo s falešnými daty.">
+  <meta property="og:description" content="Provoz 360 pro firemní provoz, TAKT pro osobní rytmus. Dva oddělené produkty, jedna značka. Proklikatelné demo s falešnými daty.">
   <meta property="og:url" content="https://vikrr.com/">
   <meta property="og:site_name" content="VIKRR">
   <meta property="og:image" content="https://vikrr.com/og-cover.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="VIKRR | Provozní software pro reálnou práci">
-  <meta name="twitter:description" content="Asset Shield pro firemní provoz, TAKT pro osobní rytmus. Proklikatelné demo s falešnými daty.">
+  <meta name="twitter:description" content="Provoz 360 pro firemní provoz, TAKT pro osobní rytmus. Proklikatelné demo s falešnými daty.">
   <meta name="twitter:image" content="https://vikrr.com/og-cover.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,9 +31,9 @@
     "url": "https://vikrr.com/",
     "logo": "https://vikrr.com/favicon.svg",
     "email": "info@vikrr.com",
-    "description": "VIKRR staví provozní software pro reálnou práci — Asset Shield pro firemní provoz a TAKT pro osobní rytmus.",
+    "description": "VIKRR staví provozní software pro reálnou práci — Provoz 360 pro firemní provoz a TAKT pro osobní rytmus.",
     "makesOffer": [
-      { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "VIKRR Asset Shield", "applicationCategory": "BusinessApplication", "operatingSystem": "Web, PWA" } },
+      { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "VIKRR Provoz 360", "applicationCategory": "BusinessApplication", "operatingSystem": "Web, PWA" } },
       { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "TAKT", "applicationCategory": "LifestyleApplication", "operatingSystem": "Web, PWA" } }
     ]
   }
@@ -252,20 +252,114 @@
       *{animation:none!important}
     }
   </style>
+  <!-- ===== DARK "VELÍN" THEME (futuristic override) ===== -->
+  <style>
+    :root{
+      --ink:#e7f1ec;--ink2:#cdd8d2;--muted:#7e8d85;--soft:#aebcb4;
+      --paper:#070b11;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);
+      --green:#21d99a;--green-bright:#39f2b2;--blue:#46d8e2;
+      --shadow-s:0 2px 14px rgba(0,0,0,.5);--shadow-m:0 18px 44px rgba(0,0,0,.55);--shadow-l:0 40px 100px rgba(0,0,0,.72);
+    }
+    body{color:var(--ink);background:
+      radial-gradient(1100px 620px at 80% -12%,rgba(33,217,154,.16),transparent 60%),
+      radial-gradient(820px 520px at 2% 8%,rgba(70,216,226,.10),transparent 60%),
+      linear-gradient(180deg,#070b11,#0a0f17 50%,#070b11)}
+    body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+      background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:48px 48px;-webkit-mask-image:radial-gradient(circle at 60% 25%,#000,transparent 78%);mask-image:radial-gradient(circle at 60% 25%,#000,transparent 78%)}
+    .nav,main{position:relative;z-index:1}
+    .nav{background:rgba(7,11,17,.72);border-bottom:1px solid rgba(255,255,255,.07);backdrop-filter:blur(20px) saturate(1.2)}
+    .brand{color:var(--ink)}.mark{background:linear-gradient(135deg,var(--green-bright),var(--green));color:#04140d;box-shadow:0 0 18px rgba(33,217,154,.5)}
+    .links{color:var(--soft)}.links a:not(.btn):hover{background:rgba(255,255,255,.06);color:#fff}
+    .btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:var(--ink);box-shadow:none;backdrop-filter:blur(6px)}
+    .btn:hover{background:rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+    .btn.dark,.btn.green{background:linear-gradient(135deg,var(--green-bright),var(--green));border-color:transparent;color:#04140d;box-shadow:0 0 24px rgba(33,217,154,.45)}
+    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.22);color:#fff}
+    .eyebrow{color:var(--green-bright)}.eyebrow::before{background:var(--green-bright);box-shadow:0 0 10px var(--green-bright)}
+    h1{color:#fff}.acc{color:var(--green-bright);text-shadow:0 0 34px rgba(57,242,178,.45)}
+    .lead{color:var(--soft)}.note{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:var(--soft)}.note b{color:#fff}
+    .proof{border-top-color:rgba(255,255,255,.08);border-bottom-color:rgba(255,255,255,.08)}
+    .proof-in{color:var(--soft)}.proof-in span::before{background:var(--green-bright);box-shadow:0 0 8px var(--green-bright)}
+    .label{color:var(--green-bright)}.title{color:#fff}.sub{color:var(--soft)}
+    .pcard{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);backdrop-filter:blur(8px)}
+    .pcard:hover{border-color:rgba(33,217,154,.5);box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 42px rgba(33,217,154,.16)}
+    .pc-ic{background:rgba(33,217,154,.14);color:var(--green-bright);box-shadow:0 0 16px rgba(33,217,154,.25)}
+    .takt .pc-ic{background:rgba(70,216,226,.14);color:var(--blue)}
+    .pcard h2{color:#fff}.pcard .desc,.feats li{color:var(--soft)}
+    .tile{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+    .tile:hover{border-color:rgba(33,217,154,.42)}.tile strong{color:#fff}.tile span{color:var(--muted)}.tile .n{color:var(--green-bright)}
+    .band{background:linear-gradient(135deg,rgba(33,217,154,.14),rgba(70,216,226,.05)),#0a0f17;border:1px solid rgba(255,255,255,.1)}
+    .band h2{color:#fff}.band p{color:rgba(255,255,255,.7)}
+    footer{color:var(--muted)}.foot{border-top-color:rgba(255,255,255,.08)}
+    /* device cluster — dark glass + glow */
+    .glow{background:radial-gradient(closest-side,rgba(33,217,154,.55),transparent)}
+    .laptop-screen{background:#0a0f16;box-shadow:0 40px 100px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.06)}
+    .laptop-base{background:linear-gradient(#222a32,#10151b)}.laptop-base::after{background:rgba(0,0,0,.35)}
+    .app{background:#0b1118}.app-top{background:#0e151d;border-bottom:1px solid rgba(255,255,255,.06)}.app-top span{color:#7fd8bf}
+    .kpis4 .kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.kpis4 .kpi b{color:#fff}.kpis4 .kpi small{color:var(--muted)}
+    .exc{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08)}.exc-name{color:#fff}
+    .exc-temp{color:var(--green-bright);text-shadow:0 0 14px rgba(57,242,178,.5)}.exc-sub{color:var(--muted)}.exc-sub b{color:#e6fff5}
+    .exc-tabs span{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.07);color:var(--soft)}
+    .exc-tabs span.active{background:rgba(33,217,154,.16);color:var(--green-bright);border-color:rgba(33,217,154,.3)}
+    .exc-chart .ln-t{stroke:#46d8e2}.exc-chart .ln-l{stroke:#f0a23a}
+    .badge{background:rgba(33,217,154,.18);color:var(--green-bright)}
+    .tablet-screen{background:#0a0f16;box-shadow:0 30px 70px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.06)}.kiosk{background:#080d16}
+    .chip{background:rgba(14,20,28,.86);border:1px solid rgba(255,255,255,.12);color:#eaf2ee;backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+    /* flow story section */
+    .flowsec{padding:30px 0 82px}
+    .flow-wrap{margin-top:8px;border:1px solid rgba(255,255,255,.09);border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));backdrop-filter:blur(6px);padding:18px;box-shadow:var(--shadow-m);overflow:hidden}
+    .flow-svg{width:100%;height:auto;display:block}
+    /* live app video inside the laptop */
+    .app-vid{line-height:0;background:#000}
+    .app-vid video{width:100%;height:280px;object-fit:cover;object-position:top center;display:block}
+    @media(max-width:560px){.flow-wrap{padding:8px}.app-vid video{height:210px}}
+    /* language switch */
+    .lang{min-height:38px;padding:0 13px;border-radius:11px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:var(--ink);font-weight:800;font-size:.82rem;letter-spacing:.06em;cursor:pointer;transition:background .15s,color .15s}
+    .lang:hover{background:rgba(255,255,255,.1);color:#fff}
+    /* contact */
+    .contact{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;border:1px solid rgba(255,255,255,.1);border-radius:30px;background:linear-gradient(135deg,rgba(33,217,154,.10),rgba(70,216,226,.04)),rgba(255,255,255,.02);padding:42px;box-shadow:var(--shadow-l)}
+    .contact-mail{display:inline-block;margin-top:18px;font-size:1.45rem;font-weight:800;color:var(--green-bright);text-shadow:0 0 22px rgba(57,242,178,.3)}
+    .contact-actions{display:flex;flex-direction:column;gap:12px}
+    @media(max-width:760px){.contact{grid-template-columns:1fr;padding:26px}.contact-actions .btn{width:100%}}
+    /* full-page living background */
+    .bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.85}
+    /* stronger scroll reveals */
+    .reveal{opacity:0;transform:translateY(46px) scale(.975);filter:blur(6px);transition:opacity .9s cubic-bezier(.16,.7,.2,1),transform .9s cubic-bezier(.16,.7,.2,1),filter .9s ease}
+    .reveal.in{opacity:1;transform:none;filter:none}
+    @media(prefers-reduced-motion:reduce){.bg-canvas{display:none}.reveal{opacity:1!important;transform:none!important;filter:none!important}}
+  </style>
 </head>
 <body>
+  <canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
   <nav class="nav">
     <div class="shell nav-in">
       <a class="brand" href="/" aria-label="VIKRR"><span class="mark">V</span><span>VIKRR</span></a>
       <div class="links">
-        <a href="/asset-shield/">Asset Shield</a>
-        <a href="/takt/">TAKT</a>
-        <a class="btn dark arrow" href="/asset-shield/demo/">Otevřít demo</a>
+        <a href="/asset-shield/" data-i18n="nav_as">Provoz 360</a>
+        <a href="/takt/" data-i18n="nav_takt">TAKT</a>
+        <a href="#kontakt" data-i18n="nav_contact">Kontakt</a>
+        <button class="lang" id="langBtn" type="button" aria-label="Language">EN</button>
+        <a class="btn dark arrow" href="/asset-shield/demo/" data-i18n="nav_demo">Otevřít demo</a>
       </div>
     </div>
   </nav>
 
   <main>
+    <style>
+      .provoz-banner{position:relative;width:100%;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-l);border:1px solid rgba(255,255,255,.08)}
+      .provoz-banner img{width:100%;display:block;transform-origin:center;animation:provozZoom 16s ease-in-out infinite}
+      .provoz-banner .pb-wifi{position:absolute;left:41%;top:56%;width:7%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(56,189,248,.5),transparent 65%);animation:pbWifi 2.4s ease-in-out infinite}
+      @keyframes provozZoom{0%,100%{transform:scale(1.02)}50%{transform:scale(1.06)}}
+      @keyframes pbWifi{0%,100%{opacity:.25;transform:translate(-50%,-50%) scale(.9)}50%{opacity:.7;transform:translate(-50%,-50%) scale(1.15)}}
+      @media(prefers-reduced-motion:reduce){.provoz-banner img{animation:none}.provoz-banner .pb-wifi{animation:none}}
+    </style>
+    <section class="shell" style="padding-top:20px">
+      <div class="provoz-banner">
+        <img src="provoz360-hero.png" alt="Provoz 360 — výroba, kancelář a údržba">
+        <span class="pb-wifi"></span>
+      </div>
+    </section>
+
     <section class="shell hero">
       <div>
         <div class="eyebrow">Provozní software VIKRR</div>
@@ -290,29 +384,13 @@
               <div class="laptop-screen">
                 <div class="app">
                   <div class="app-top">
-                    <span class="app-brand"><i></i>Asset Shield</span>
+                    <span class="app-brand"><i></i>Provoz 360</span>
                     <span>Dobré ráno, Vilem</span>
                   </div>
-                  <div class="app-body">
-                    <div class="app-lbl">Denní provoz</div>
-                    <div class="kpis kpis4">
-                      <div class="kpi"><b>34</b><small>Otevřené úkoly</small></div>
-                      <div class="kpi"><b>0</b><small>Po termínu</small></div>
-                      <div class="kpi"><b>0</b><small>Deník prací</small></div>
-                      <div class="kpi"><b>0</b><small>Závady dnes</small></div>
-                    </div>
-                    <div class="exc">
-                      <div class="exc-top">
-                        <span class="exc-name"><span class="badge">V provozu</span> Extruder 2</span>
-                        <span class="exc-temp" id="liveTemp">55 °C</span>
-                      </div>
-                      <div class="exc-sub">Převodovka 2 · STR_074 · zátěž <b>40 A</b></div>
-                      <svg class="exc-chart" viewBox="0 0 200 54" preserveAspectRatio="none" aria-hidden="true">
-                        <polyline class="ln-t" points="0,38 33,26 66,30 100,16 133,28 166,13 200,21"/>
-                        <polyline class="ln-l" points="0,45 33,41 66,47 100,35 133,43 166,39 200,45"/>
-                      </svg>
-                      <div class="exc-tabs"><span class="active">Teplota</span><span>Karta</span><span>Servis</span></div>
-                    </div>
+                  <div class="app-vid">
+                    <video autoplay muted loop playsinline preload="auto" aria-label="Ukázka aplikace Provoz 360">
+                      <source src="/media/app-demo.mp4" type="video/mp4">
+                    </video>
                   </div>
                 </div>
               </div>
@@ -353,7 +431,7 @@
       </div>
       <div class="split">
         <article class="pcard">
-          <div class="pc-top"><span class="pc-ic">AS</span><div><span class="pc-tag">Pro firmy · B2B</span><h2>Asset Shield</h2></div></div>
+          <div class="pc-top"><span class="pc-ic">P3</span><div><span class="pc-tag">Pro firmy · B2B</span><h2>Provoz 360</h2></div></div>
           <p class="desc">Provozní systém pro výrobu, údržbu a kvalitu. Drží majetek, servis a kontrolní doklady na jednom místě — připravený na audit, ne na výmluvy.</p>
           <ul class="feats">
             <li>Kartotéka a rodný list každého zařízení</li>
@@ -395,6 +473,96 @@
       </div>
     </section>
 
+    <section class="shell flowsec">
+      <div class="sec-head">
+        <div class="label">Váš provoz — živě</div>
+        <h2 class="title">Celá výroba na jedné obrazovce.</h2>
+        <p class="sub">Od příjmu suroviny přes extruder a dopravník až po doklad — všechno se v Provoz 360 děje a zapisuje v reálném čase.</p>
+      </div>
+      <div class="flow-wrap">
+        <svg class="flow-svg" viewBox="0 0 1200 360" role="img" aria-label="Animovaná budova provozu">
+          <defs>
+            <filter id="fg" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#111c27"/><stop offset="1" stop-color="#0a0f17"/></linearGradient>
+          </defs>
+
+          <!-- ground + perspective -->
+          <line x1="40" y1="306" x2="1160" y2="306" stroke="rgba(57,242,178,.35)" stroke-width="1.5"/>
+          <g stroke="rgba(255,255,255,.05)"><line x1="120" y1="306" x2="40" y2="350"/><line x1="400" y1="306" x2="370" y2="350"/><line x1="800" y1="306" x2="830" y2="350"/><line x1="1080" y1="306" x2="1160" y2="350"/></g>
+
+          <!-- ===== floating dashboard (data out) ===== -->
+          <path id="beam" d="M790 96 C 860 56 900 120 1000 116" fill="none" stroke="rgba(57,242,178,.4)" stroke-width="1.6" stroke-dasharray="2 8"><animate attributeName="stroke-dashoffset" values="0;-100" dur="2.6s" repeatCount="indefinite"/></path>
+          <g filter="url(#fg)" fill="#7dffce"><circle r="3"><animateMotion dur="3s" repeatCount="indefinite"><mpath href="#beam"/></animateMotion></circle><circle r="2.6"><animateMotion dur="3s" begin="-1s" repeatCount="indefinite"><mpath href="#beam"/></animateMotion></circle><circle r="3"><animateMotion dur="3s" begin="-2s" repeatCount="indefinite"><mpath href="#beam"/></animateMotion></circle></g>
+          <g>
+            <rect x="902" y="66" width="224" height="100" rx="13" fill="rgba(11,17,25,.92)" stroke="rgba(57,242,178,.4)"/>
+            <circle cx="920" cy="86" r="3.5" fill="#39f2b2"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle>
+            <text x="932" y="90" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="#e7f1ec">Provoz 360 · živě</text>
+            <text x="918" y="120" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#39f2b2">34</text>
+            <text x="918" y="134" font-family="Inter,sans-serif" font-size="8.5" fill="#7e8d85">úkoly</text>
+            <text x="978" y="120" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#46d8e2">55°C</text>
+            <text x="978" y="134" font-family="Inter,sans-serif" font-size="8.5" fill="#7e8d85">extruder</text>
+            <polyline points="1042,128 1058,112 1074,120 1090,100 1106,114" fill="none" stroke="#46d8e2" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values=".5;1;.5" dur="2.4s" repeatCount="indefinite"/></polyline>
+          </g>
+
+          <!-- ===== building shell (cutaway) ===== -->
+          <path d="M350 96 l30 -18 h470 l-30 18 z" fill="#0c121b" stroke="rgba(57,242,178,.3)"/>
+          <path d="M820 96 l30 -18 v210 l-30 18 z" fill="#080d14" stroke="rgba(57,242,178,.22)"/>
+          <rect x="350" y="96" width="470" height="210" rx="5" fill="url(#glass)" stroke="rgba(57,242,178,.45)" stroke-width="1.5"/>
+          <rect x="700" y="80" width="58" height="16" rx="2" fill="#0e151d" stroke="rgba(255,255,255,.12)"/>
+          <line x1="350" y1="203" x2="820" y2="203" stroke="rgba(255,255,255,.1)"/>
+          <text x="362" y="118" font-family="Inter,sans-serif" font-size="9" font-weight="800" letter-spacing="1" fill="rgba(57,242,178,.7)">DISPEČINK</text>
+          <text x="362" y="224" font-family="Inter,sans-serif" font-size="9" font-weight="800" letter-spacing="1" fill="rgba(57,242,178,.7)">VÝROBA</text>
+
+          <!-- upper floor: control room -->
+          <g>
+            <rect x="600" y="128" width="150" height="56" rx="5" fill="#0b1119" stroke="rgba(255,255,255,.12)"/>
+            <g>
+              <rect x="614" y="160" width="12" height="14" rx="2" fill="#39f2b2"><animate attributeName="height" values="10;20;12" dur="2.1s" repeatCount="indefinite"/><animate attributeName="y" values="164;154;162" dur="2.1s" repeatCount="indefinite"/></rect>
+              <rect x="632" y="156" width="12" height="18" rx="2" fill="#46d8e2"><animate attributeName="height" values="18;11;20" dur="2.1s" begin="-.6s" repeatCount="indefinite"/><animate attributeName="y" values="156;163;154" dur="2.1s" begin="-.6s" repeatCount="indefinite"/></rect>
+              <rect x="650" y="158" width="12" height="16" rx="2" fill="#39f2b2"><animate attributeName="height" values="14;22;10" dur="2.1s" begin="-1.1s" repeatCount="indefinite"/><animate attributeName="y" values="160;152;164" dur="2.1s" begin="-1.1s" repeatCount="indefinite"/></rect>
+              <polyline points="676,168 690,150 704,160 718,142 732,154" fill="none" stroke="#46d8e2" stroke-width="1.8" stroke-linecap="round"/>
+            </g>
+            <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0" dur="3.6s" repeatCount="indefinite"/>
+              <circle cx="565" cy="158" r="8" fill="#cfe9df"/><path d="M565 167 q-12 2 -12 24 l24 0 q0 -22 -12 -24 z" fill="#46d8e2"/></g>
+          </g>
+
+          <!-- ground floor: production line -->
+          <g>
+            <!-- silo -->
+            <rect x="372" y="236" width="30" height="58" fill="#11202b" stroke="rgba(255,255,255,.12)"/>
+            <ellipse cx="387" cy="236" rx="15" ry="6" fill="#16323f"/>
+            <!-- material drop silo->extruder -->
+            <path id="mat" d="M396 256 q24 0 34 8" fill="none" stroke="none"/>
+            <g fill="#f0c24a" filter="url(#fg)"><circle r="2.4"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#mat"/></animateMotion></circle><circle r="2"><animateMotion dur="1.6s" begin="-.8s" repeatCount="indefinite"><mpath href="#mat"/></animateMotion></circle></g>
+            <!-- extruder -->
+            <rect x="430" y="250" width="74" height="44" rx="5" fill="#13202b" stroke="rgba(57,242,178,.45)"/>
+            <rect x="440" y="236" width="18" height="16" fill="#13202b" stroke="rgba(255,255,255,.14)"/>
+            <g transform="translate(472,272)"><circle r="9" fill="none" stroke="rgba(70,216,226,.55)" stroke-width="1.5"/><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="1.3s" repeatCount="indefinite"/><line x1="0" y1="-9" x2="0" y2="9" stroke="#46d8e2" stroke-width="2"/><line x1="-9" y1="0" x2="9" y2="0" stroke="rgba(70,216,226,.5)" stroke-width="1.2"/></g></g>
+            <circle cx="496" cy="256" r="3" fill="#7dffce" filter="url(#fg)"><animate attributeName="opacity" values=".3;1;.3" dur="1.8s" repeatCount="indefinite"/><animate attributeName="r" values="2.2;4;2.2" dur="1.8s" repeatCount="indefinite"/></circle>
+            <!-- conveyor -->
+            <rect x="504" y="286" width="224" height="9" rx="3" fill="#0e151d" stroke="rgba(255,255,255,.1)"/>
+            <line x1="508" y1="290.5" x2="724" y2="290.5" stroke="rgba(70,216,226,.5)" stroke-width="2" stroke-dasharray="6 8"><animate attributeName="stroke-dashoffset" values="0;-28" dur="1s" repeatCount="indefinite"/></line>
+            <g fill="#39f2b2"><rect y="278" width="13" height="10" rx="2"><animate attributeName="x" values="506;716" dur="3.4s" repeatCount="indefinite"/></rect><rect y="278" width="13" height="10" rx="2"><animate attributeName="x" values="506;716" dur="3.4s" begin="-1.1s" repeatCount="indefinite"/></rect><rect y="278" width="13" height="10" rx="2"><animate attributeName="x" values="506;716" dur="3.4s" begin="-2.2s" repeatCount="indefinite"/></rect></g>
+            <!-- output bins -->
+            <rect x="730" y="272" width="42" height="23" rx="3" fill="#11202b" stroke="rgba(255,255,255,.12)"/>
+            <!-- worker with tablet + uplink -->
+            <line x1="414" y1="262" x2="414" y2="208" stroke="rgba(57,242,178,.4)" stroke-dasharray="2 5" stroke-width="1.3"><animate attributeName="stroke-dashoffset" values="0;14" dur="1.3s" repeatCount="indefinite"/></line>
+            <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="3.2s" repeatCount="indefinite"/>
+              <circle cx="406" cy="258" r="7.5" fill="#cfe9df"/><path d="M406 266 q-11 2 -11 26 l22 0 q0 -24 -11 -26 z" fill="#39f2b2"/>
+              <rect x="414" y="266" width="12" height="16" rx="2" fill="#0e151d" stroke="#7dffce"/><line x1="416" y1="270" x2="424" y2="270" stroke="#7dffce" stroke-width="1.1"/></g>
+          </g>
+
+          <!-- arriving truck -->
+          <g><animateTransform attributeName="transform" type="translate" values="-220 0;108 0;108 0" keyTimes="0;0.45;1" dur="8s" repeatCount="indefinite"/>
+            <rect x="150" y="270" width="66" height="26" rx="3" fill="#13202b" stroke="rgba(255,255,255,.14)"/>
+            <rect x="216" y="278" width="26" height="18" rx="3" fill="#0e151d" stroke="rgba(70,216,226,.5)"/>
+            <rect x="220" y="281" width="14" height="8" rx="1.5" fill="#0b2230"/>
+            <circle cx="172" cy="298" r="6" fill="#0a0f17" stroke="rgba(255,255,255,.25)"/><circle cx="204" cy="298" r="6" fill="#0a0f17" stroke="rgba(255,255,255,.25)"/><circle cx="232" cy="298" r="6" fill="#0a0f17" stroke="rgba(255,255,255,.25)"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
     <section class="shell section" style="padding-top:0">
       <div class="band">
         <div class="band-in">
@@ -406,6 +574,20 @@
             <a class="btn green arrow" href="/asset-shield/demo/">Otevřít demo</a>
             <a class="btn ghost arrow" href="mailto:info@vikrr.com?subject=Z%C3%A1jem%20o%20implementaci%20VIKRR%20Asset%20Shield">Domluvit implementaci</a>
           </div>
+        </div>
+      </div>
+    </section>
+    <section class="shell section" id="kontakt" style="padding-top:0">
+      <div class="contact">
+        <div class="contact-left">
+          <div class="label" id="c_label">Kontakt</div>
+          <h2 class="title" id="c_title">Pojďme to rozjet ve vaší firmě.</h2>
+          <p class="sub" id="c_sub">Napište nám — domluvíme ukázku na míru i nasazení do vašeho provozu. Odpovídáme rychle.</p>
+          <a class="contact-mail" href="mailto:info@vikrr.com?subject=Z%C3%A1jem%20o%20VIKRR%20Asset%20Shield">info@vikrr.com</a>
+        </div>
+        <div class="contact-actions">
+          <a class="btn green arrow" href="/asset-shield/demo/" id="c_cta1">Otevřít demo</a>
+          <a class="btn ghost arrow" href="mailto:info@vikrr.com?subject=Z%C3%A1jem%20o%20implementaci%20VIKRR%20Asset%20Shield" id="c_cta2">Domluvit implementaci</a>
         </div>
       </div>
     </section>
@@ -422,6 +604,10 @@
   (function(){
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
     var noHover = window.matchMedia && window.matchMedia('(hover:none)').matches;
+
+    /* force-play the hero app video (muted autoplay can be flaky) */
+    var heroVid = document.querySelector('.app-vid video');
+    if(heroVid){ heroVid.muted = true; var hp = heroVid.play(); if(hp && hp.catch) hp.catch(function(){}); }
 
     /* ── scroll reveals (emons-style staged entrance) ── */
     if(!reduce && 'IntersectionObserver' in window){
@@ -479,7 +665,7 @@
     if(cv && !reduce){
       var ctx=cv.getContext('2d'), W=0,H=0, DPR=Math.min(window.devicePixelRatio||1,2), lines=[], t=0;
       function resize(){ var r=cv.getBoundingClientRect(); W=cv.width=Math.max(1,r.width*DPR); H=cv.height=Math.max(1,r.height*DPR); }
-      function seed(){ lines=[]; for(var i=0;i<14;i++){ lines.push({y:Math.random(),off:Math.random()*1000,sp:0.15+Math.random()*0.5,amp:(8+Math.random()*26)*DPR,w:(Math.random()<0.3?2:1)*DPR,a:0.05+Math.random()*0.13}); } }
+      function seed(){ lines=[]; for(var i=0;i<14;i++){ lines.push({y:Math.random(),off:Math.random()*1000,sp:0.15+Math.random()*0.5,amp:(8+Math.random()*26)*DPR,w:(Math.random()<0.3?2:1)*DPR,a:0.1+Math.random()*0.18}); } }
       function frame(){
         t++; ctx.clearRect(0,0,W,H);
         for(var i=0;i<lines.length;i++){
@@ -488,10 +674,10 @@
             var yy=L.y*H + Math.sin((x*0.012/DPR)+(t*0.01*L.sp)+L.off)*L.amp;
             x===0 ? ctx.moveTo(x,yy) : ctx.lineTo(x,yy);
           }
-          ctx.strokeStyle='rgba(19,122,91,'+L.a+')'; ctx.lineWidth=L.w; ctx.stroke();
+          ctx.strokeStyle='rgba(46,232,172,'+L.a+')'; ctx.lineWidth=L.w; ctx.stroke();
           var px=((t*L.sp*2.4 + L.off*7) % (W+40)) - 20;
           var py=L.y*H + Math.sin((px*0.012/DPR)+(t*0.01*L.sp)+L.off)*L.amp;
-          ctx.beginPath(); ctx.arc(px,py,2.4*DPR,0,7); ctx.fillStyle='rgba(33,167,125,'+(L.a+0.28)+')'; ctx.fill();
+          ctx.shadowColor='rgba(80,255,205,.9)'; ctx.shadowBlur=8*DPR; ctx.beginPath(); ctx.arc(px,py,2.4*DPR,0,7); ctx.fillStyle='rgba(120,255,215,'+(L.a+0.5)+')'; ctx.fill(); ctx.shadowBlur=0;
         }
         requestAnimationFrame(frame);
       }
@@ -511,6 +697,134 @@
         bn.textContent=batches[bi][0]; bt.textContent=batches[bi][1]; bt.className=batches[bi][2];
       }, 2700);
     }
+  })();
+  </script>
+  <script>
+  (function(){
+    var btn=document.getElementById('langBtn');
+    if(!btn) return;
+    function all(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+    function setT(el,en){ if(el==null) return; if(el._cs==null) el._cs=el.textContent; el.textContent=en; }
+    function setH(el,en){ if(el==null) return; if(el._csh==null) el._csh=el.innerHTML; el.innerHTML=en; }
+    function rsT(el){ if(el&&el._cs!=null) el.textContent=el._cs; }
+    function rsH(el){ if(el&&el._csh!=null) el.innerHTML=el._csh; }
+
+    var sec=all('.sec-head'), pc=all('.split .pcard'), tile=all('.why .tile'), proof=all('.proof-in span');
+    function q(s){ return document.querySelector(s); }
+
+    function toEN(){
+      setT(q('[data-i18n="nav_contact"]'),'Contact');
+      setT(q('[data-i18n="nav_demo"]'),'Open demo');
+      setT(q('[data-i18n="nav_as"]'),'Operations 360');
+      setT(q('.eyebrow'),'Operations software by VIKRR');
+      var hl=all('.h-line>span'); setT(hl[0],'Software that holds it all'); setT(q('.acc'),'together');
+      setT(q('.hero .lead'),"Real work isn't a form. We build tools where every record knows which machine, place and person it belongs to — from factory operations to everyday personal rhythm.");
+      setH(q('.hero .note'),'<span class="dot"></span> The public site <b>does not</b> open the live company app. A separate demo with fake data is available to try.');
+      var hc=all('.hero .cta-row .btn'); setT(hc[0],'Open demo'); setT(hc[1],'Book a walkthrough');
+      var pen=['Built in food production','Mobile-first PWA','Role-based access','Records by date','Secure backend'];
+      proof.forEach(function(el,i){ setT(el,pen[i]); });
+      if(sec[0]){ setT(sec[0].querySelector('.label'),'Two products'); setT(sec[0].querySelector('.title'),'One brand, two separate worlds of work.'); setT(sec[0].querySelector('.sub'),'VIKRR is not one bloated app. Each product has its own users, its own environment and its own data — so we keep them apart.'); }
+      if(sec[1]){ setT(sec[1].querySelector('.label'),'Why VIKRR'); setT(sec[1].querySelector('.title'),'Domain know-how, not a generic template.'); }
+      if(sec[2]){ setT(sec[2].querySelector('.label'),'One data — everywhere'); setT(sec[2].querySelector('.title'),'From the machine to the beach. Same truth.'); setT(sec[2].querySelector('.sub'),'The operator logs at the machine on a phone. The office sees it on a PC. The owner checks from home or the beach — always the same live data.'); }
+      if(pc[0]){ setT(pc[0].querySelector('h2'),'Operations 360'); setT(pc[0].querySelector('.pc-tag'),'For business · B2B'); setT(pc[0].querySelector('.desc'),'An operations system for production, maintenance and quality. Keeps assets, service and compliance records in one place — ready for an audit, not for excuses.');
+        var f0=['Asset register and birth certificate of every machine','Tasks, inspections, measurements and service history','Operator kiosk with role-based actions','Records by date for IFS / customer audits']; pc[0].querySelectorAll('.feats li').forEach(function(el,i){ setT(el,f0[i]); }); }
+      if(pc[1]){ setT(pc[1].querySelector('.pc-tag'),'For personal use'); setT(pc[1].querySelector('.desc'),'Your daily rhythm without the fuss. Food, routines and habits within reach — practical support that keeps pace with you, not against you.');
+        var f1=['Log food and meals through the day','Routines and recurring habits','Overview in a simple mobile interface','Private, separate from company data']; pc[1].querySelectorAll('.feats li').forEach(function(el,i){ setT(el,f1[i]); }); }
+      var ts=[['Record in context','The record sits with the thing it concerns — not lost in someone else’s spreadsheet.'],['Demo without risk','Try the product on fake data, with no production access.'],['Instance per company','The live environment is set up only for a specific organization.'],['Mobile-first','Works where the work happens — at the machine, not just at a desk.']];
+      tile.forEach(function(el,i){ if(ts[i]){ setT(el.querySelector('strong'),ts[i][0]); setT(el.querySelector('span'),ts[i][1]); } });
+      setT(q('.band h2'),'Ready to see it on your own data?'); setT(q('.band p'),'Start with a clickable demo. For your company we set up roles, code lists, imports and a dedicated instance.');
+      var bc=all('.band .btn'); setT(bc[0],'Open demo'); setT(bc[1],'Book implementation');
+      setT(q('#c_label'),'Contact'); setT(q('#c_title'),"Let's get it running in your company."); setT(q('#c_sub'),'Write to us — we will arrange a tailored demo and rollout into your operation. We reply fast.');
+      setT(q('#c_cta1'),'Open demo'); setT(q('#c_cta2'),'Book implementation');
+      btn.textContent='CZ'; document.documentElement.lang='en';
+    }
+    function toCZ(){
+      [q('[data-i18n="nav_contact"]'),q('[data-i18n="nav_demo"]'),q('[data-i18n="nav_as"]'),q('.eyebrow'),q('.hero .lead'),q('.acc')].forEach(rsT);
+      var hl=all('.h-line>span'); rsT(hl[0]);
+      rsH(q('.hero .note'));
+      all('.hero .cta-row .btn').forEach(rsT); proof.forEach(rsT);
+      sec.forEach(function(s){ ['.label','.title','.sub'].forEach(function(c){ rsT(s.querySelector(c)); }); });
+      pc.forEach(function(p){ rsT(p.querySelector('h2')); rsT(p.querySelector('.pc-tag')); rsT(p.querySelector('.desc')); p.querySelectorAll('.feats li').forEach(rsT); });
+      tile.forEach(function(t){ rsT(t.querySelector('strong')); rsT(t.querySelector('span')); });
+      rsT(q('.band h2')); rsT(q('.band p')); all('.band .btn').forEach(rsT);
+      ['#c_label','#c_title','#c_sub','#c_cta1','#c_cta2'].forEach(function(s){ rsT(q(s)); });
+      btn.textContent='EN'; document.documentElement.lang='cs';
+    }
+    var lang='cs';
+    try{ lang=localStorage.getItem('vikrr_lang')||'cs'; }catch(e){}
+    if(lang==='en') toEN();
+    btn.addEventListener('click',function(){
+      lang = (lang==='cs')?'en':'cs';
+      if(lang==='en') toEN(); else toCZ();
+      try{ localStorage.setItem('vikrr_lang',lang); }catch(e){}
+    });
+  })();
+  </script>
+  <script>
+  (function(){
+    var cv=document.getElementById('bgCanvas');
+    if(!cv) return;
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches){ cv.style.display='none'; return; }
+    var ctx=cv.getContext('2d'), W=0,H=0, DPR=Math.min(window.devicePixelRatio||1,2), lines=[], P=[], t=0, mx=-99999, my=-99999;
+    function resize(){ W=cv.width=Math.max(1,innerWidth*DPR); H=cv.height=Math.max(1,innerHeight*DPR); cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px'; }
+    function seed(){
+      lines=[]; var n=Math.round(innerHeight/130)+4;
+      for(var i=0;i<n;i++){ lines.push({y:Math.random(),off:Math.random()*1000,sp:0.1+Math.random()*0.4,amp:(10+Math.random()*42)*DPR,w:(Math.random()<0.25?1.5:0.8)*DPR,a:0.03+Math.random()*0.07}); }
+      P=[]; var pn=Math.min(60,Math.round((innerWidth*innerHeight)/30000)+16);
+      for(var j=0;j<pn;j++){ P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.22*DPR,vy:(Math.random()-0.5)*0.22*DPR,r:(0.8+Math.random()*1.7)*DPR,ph:Math.random()*6.28}); }
+    }
+    var LINK=135*DPR, MR=170*DPR;
+    function frame(){
+      if(W<=2 && innerWidth>0){ resize(); seed(); }
+      t++; ctx.clearRect(0,0,W,H);
+      for(var i=0;i<lines.length;i++){ var L=lines[i]; ctx.beginPath();
+        for(var x=0;x<=W;x+=18*DPR){ var yy=L.y*H + Math.sin((x*0.010/DPR)+(t*0.008*L.sp)+L.off)*L.amp; x===0?ctx.moveTo(x,yy):ctx.lineTo(x,yy); }
+        ctx.strokeStyle='rgba(46,232,172,'+L.a+')'; ctx.lineWidth=L.w; ctx.stroke();
+      }
+      for(var p=0;p<P.length;p++){ var a=P[p]; a.x+=a.vx; a.y+=a.vy;
+        if(a.x<0){a.x=0;a.vx*=-1;} if(a.x>W){a.x=W;a.vx*=-1;}
+        if(a.y<0){a.y=0;a.vy*=-1;} if(a.y>H){a.y=H;a.vy*=-1;}
+        if(mx>-9000){ var ddx=mx-a.x, ddy=my-a.y, d2=ddx*ddx+ddy*ddy; if(d2<MR*MR){ a.vx+=ddx*0.00016; a.vy+=ddy*0.00016; } }
+        a.vx*=0.986; a.vy*=0.986;
+      }
+      ctx.lineWidth=1*DPR;
+      for(var b=0;b<P.length;b++){ var A=P[b];
+        for(var c=b+1;c<P.length;c++){ var B=P[c], dx=A.x-B.x, dy=A.y-B.y, dd=Math.sqrt(dx*dx+dy*dy);
+          if(dd<LINK){ ctx.strokeStyle='rgba(80,240,190,'+((1-dd/LINK)*0.15)+')'; ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke(); } }
+      }
+      for(var q=0;q<P.length;q++){ var N=P[q], near=(mx>-9000)?Math.max(0,1-(Math.sqrt((mx-N.x)*(mx-N.x)+(my-N.y)*(my-N.y))/MR)):0;
+        var pulse=0.6+0.4*Math.sin(t*0.03+N.ph);
+        ctx.beginPath(); ctx.shadowColor='rgba(90,255,210,.85)'; ctx.shadowBlur=(6+near*12)*DPR;
+        ctx.arc(N.x,N.y,N.r*(1+near*0.9),0,7); ctx.fillStyle='rgba(120,255,215,'+((0.32+near*0.55)*pulse)+')'; ctx.fill(); ctx.shadowBlur=0;
+      }
+      requestAnimationFrame(frame);
+    }
+    resize(); seed(); requestAnimationFrame(frame);
+    addEventListener('pointermove',function(e){ mx=e.clientX*DPR; my=e.clientY*DPR; });
+    addEventListener('pointerleave',function(){ mx=my=-99999; });
+    var rz; addEventListener('resize',function(){ clearTimeout(rz); rz=setTimeout(function(){resize();seed();},160); });
+  })();
+  </script>
+  <script>
+  (function(){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    if(window.matchMedia && window.matchMedia('(hover:none)').matches) return;
+    /* cursor spotlight */
+    var spot=document.createElement('div');
+    spot.style.cssText='position:fixed;left:0;top:0;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,rgba(33,217,154,.13),transparent 66%);pointer-events:none;z-index:0;opacity:0;transition:opacity .35s ease;will-change:transform';
+    document.body.appendChild(spot);
+    var sx=0,sy=0,sraf=null;
+    addEventListener('pointermove',function(e){ sx=e.clientX; sy=e.clientY; spot.style.opacity='1';
+      if(!sraf) sraf=requestAnimationFrame(function(){ spot.style.transform='translate('+sx+'px,'+sy+'px) translate(-50%,-50%)'; sraf=null; }); });
+    addEventListener('pointerleave',function(){ spot.style.opacity='0'; });
+    /* 3D tilt on cards + tiles */
+    document.querySelectorAll('.pcard, .tile').forEach(function(card){
+      card.style.transition='transform .12s ease, border-color .18s, box-shadow .18s';
+      card.addEventListener('pointermove',function(e){ var r=card.getBoundingClientRect();
+        var px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+        card.style.transform='perspective(820px) rotateY('+(px*7)+'deg) rotateX('+(-py*7)+'deg) translateY(-6px)'; });
+      card.addEventListener('pointerleave',function(){ card.style.transform=''; });
+    });
   })();
   </script>
 </body>
