@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D model interiéru | Přístavba RD</title>
-<meta name="description" content="Interaktivní 3D model interiéru 1.NP podle projektové dokumentace — dispozice, plochy místností, průchozí prohlídka.">
+<title>3D model interiéru — 1.NP a 1.S | Přístavba RD</title>
+<meta name="description" content="Interaktivní 3D model interiéru přístavby RD podle projektové dokumentace — 1.NP i suterén, dispozice, plochy místností, průchozí prohlídka.">
 <meta name="theme-color" content="#0f1713">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,6 +54,12 @@ a{color:inherit;text-decoration:none}
 .room em{font-style:normal;color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums}
 .room.out span{color:var(--soft)}
 
+.levels{margin-top:11px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.lv{border:1px solid var(--line);border-radius:11px;background:#fff;padding:9px 4px;font-weight:800;font-size:.84rem;cursor:pointer;font-family:inherit;color:var(--soft);transition:background .15s,color .15s,border-color .15s}
+.lv:hover{background:#faf7f0}
+.lv.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lvinfo{margin-top:9px;color:var(--muted);font-size:.77rem}
+.rooms .sec{margin:8px 0 2px;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .hint{padding:14px 20px 22px;color:var(--muted);font-size:.77rem}
 .hint b{color:var(--soft);font-weight:750}
 .hint ul{margin-top:7px;padding-left:16px;display:grid;gap:3px}
@@ -92,8 +98,8 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   <aside class="side" id="side">
     <div class="side-head">
       <a class="brand" href="/"><span class="mark">V</span> VIKRR</a>
-      <h1>3D model interiéru — 1.NP</h1>
-      <p>Přístavba rodinného domu. Model je postavený podle výkresu <b>Půdorys 1.NP</b> — rozměry a plochy odpovídají projektu.</p>
+      <h1>3D model interiéru</h1>
+      <p>Přístavba rodinného domu — 1.NP a suterén. Model je postavený podle výkresů <b>Půdorys 1.NP</b>, <b>Půdorys 1.S</b> a <b>Řez objektem</b>; rozměry a plochy odpovídají projektu.</p>
       <div class="stats">
         <div class="stat"><small>Užitná plocha 1.NP</small><b>134,56 m²</b></div>
         <div class="stat"><small>Zastavěná plocha</small><b>182 m²</b></div>
@@ -101,13 +107,25 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
         <div class="stat"><small>Světlá výška</small><b>2,8 m</b></div>
         <div class="stat"><small>Hřeben</small><b>6,2 m</b></div>
         <div class="stat"><small>Sklon střechy</small><b>37°</b></div>
+        <div class="stat"><small>Užitná plocha 1.S</small><b>80,87 m²</b></div>
+        <div class="stat"><small>Obestavěný prostor</small><b>1215 m³</b></div>
       </div>
+    </div>
+
+    <div class="group">
+      <h2>Podlaží</h2>
+      <div class="levels" id="levels">
+        <button class="lv on" data-lvl="np">1.NP</button>
+        <button class="lv" data-lvl="s">1.S</button>
+        <button class="lv" data-lvl="both">Obě</button>
+      </div>
+      <p class="lvinfo" id="lvinfo">Užitná plocha 134,56 m² · 15 místností</p>
     </div>
 
     <div class="group">
       <h2>Zobrazení</h2>
       <div class="toggles">
-        <button class="tg" id="tgRoof" aria-pressed="false">Střecha <span class="sw"></span></button>
+        <button class="tg" id="tgRoof" aria-pressed="false">Střecha / strop <span class="sw"></span></button>
         <button class="tg" id="tgWalls" aria-pressed="true">Příčky <span class="sw"></span></button>
         <button class="tg" id="tgFurn" aria-pressed="true">Vybavení <span class="sw"></span></button>
         <button class="tg" id="tgOut" aria-pressed="true">Přístřešky a terasa <span class="sw"></span></button>
@@ -117,7 +135,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
     </div>
 
     <div class="group">
-      <h2>Místnosti 1.NP</h2>
+      <h2 id="roomsHead">Místnosti 1.NP</h2>
       <div class="rooms" id="roomList"></div>
     </div>
 
@@ -130,7 +148,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
         <li>Kliknutí na podlahu — výběr místnosti</li>
         <li>V procházce: <b>W A S D</b>, Shift = běh, Esc = zpět</li>
       </ul>
-      <div class="src">Podklad: Půdorys 1.NP, Situace a Řez objektem. Obestavěný prostor cca 1215 m³.</div>
+      <div class="src">Podklad: Půdorys 1.NP, Půdorys 1.S, Situace a Řez objektem. Obestavěný prostor celkem cca 1215 m³ (1.NP 775 m³ + 1.S 440 m³).</div>
       <a class="back" href="/">← Zpět na vikrr.com</a>
     </div>
   </aside>
@@ -193,7 +211,20 @@ const ROOMS = [
   {n:'114', name:'Parkovací stání',x0: 2.750,x1:11.250, z0:9.745,z1:14.745,a:42.50, c:'#cdcdc9', out:true},
   {n:'115', name:'Závětří',        x0:11.250,x1:12.750, z0:8.755,z1:14.755,a:9.00,  c:'#dad6cb', out:true}
 ];
-ROOMS.forEach(r=>{r.id='r'+r.n;r.cx=(r.x0+r.x1)/2;r.cz=(r.z0+r.z1)/2;});
+/* 1.S — půdorys suterénu, podlaha na kótě −3,25 m (světlá 2,8 + strop 0,45).
+   Suterén je pod východní částí domu: x 9,0–21,5 · z 0–8,5 */
+const FLOOR_S=-3.25, H_S=2.80;
+const ROOMS_S=[
+  {n:'1S04', name:'Dílna / garáž',       x0: 9.500,x1:18.250, z0:0.500,z1:5.500, a:43.75, c:'#d2d2ce'},
+  {n:'1S03', name:'Sklad dílna',         x0: 9.500,x1:11.750, z0:5.750,z1:8.000, a:5.05,  c:'#ddd8cc'},
+  {n:'1S02', name:'Koupelna',            x0:11.900,x1:13.650, z0:5.600,z1:8.000, a:4.19,  c:'#d3e0ea'},
+  {n:'1S01', name:'Chodba se schodištěm',x0:13.800,x1:17.870, z0:5.600,z1:8.000, a:9.76,  c:'#e3ded2'},
+  {n:'1S05', name:'Technika',            x0:18.500,x1:21.000, z0:3.650,z1:7.900, a:10.62, c:'#dcdfe2'},
+  {n:'1S06', name:'Černá kuchyně / zázemí',x0:18.500,x1:21.000, z0:0.500,z1:3.500, a:7.50, c:'#dfe3d6'}
+];
+ROOMS.forEach(r=>r.lvl='np'); ROOMS_S.forEach(r=>r.lvl='s');
+const ALL=ROOMS.concat(ROOMS_S);
+ALL.forEach(r=>{r.id='r'+r.n;r.cx=(r.x0+r.x1)/2;r.cz=(r.z0+r.z1)/2;r.y=(r.lvl==='s'?FLOOR_S:0);});
 
 /* ── scéna ── */
 const view=document.getElementById('view');
@@ -219,7 +250,7 @@ const amb=new THREE.AmbientLight(0xffffff,0.16); scene.add(amb);
 const inLight=new THREE.HemisphereLight(0xfff4e6,0xb8ad9c,0.0); // doplňkové světlo interiéru
 inLight.position.set(10.75,2.6,4.25); scene.add(inLight);
 let nightOn=false;
-function interiorLight(){ inLight.intensity = nightOn ? 0.10 : (gRoof.visible ? 0.62 : 0.16); }
+function interiorLight(){ inLight.intensity = nightOn ? 0.10 : ((gRoof.visible||gBaseCeil.visible) ? 0.62 : 0.22); }
 
 const M={
   wall:  new THREE.MeshLambertMaterial({color:0xefe9df}),
@@ -242,7 +273,9 @@ const M={
 const gShell=new THREE.Group(), gInner=new THREE.Group(), gFloor=new THREE.Group(),
       gRoof=new THREE.Group(), gCeil=new THREE.Group(), gFurn=new THREE.Group(),
       gOut=new THREE.Group(), gLamps=new THREE.Group();
-scene.add(gShell,gInner,gFloor,gRoof,gCeil,gFurn,gOut,gLamps);
+const gBase=new THREE.Group(), gBaseFloor=new THREE.Group(), gBaseFurn=new THREE.Group(),
+      gBaseCeil=new THREE.Group();
+scene.add(gShell,gInner,gFloor,gRoof,gCeil,gFurn,gOut,gLamps,gBase,gBaseFloor,gBaseFurn,gBaseCeil);
 
 /* terén a deska */
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(120,120),M.grass);
@@ -532,6 +565,83 @@ box(2.00,0,4.20,1.00,0.75,2.60,M.woodD,0,gOut);
   b.position.copy(l.position); b.visible=false; l.userData.bulb=b; gLamps.add(b);
 });
 
+/* ═══════════════ 1.S — suterén ═══════════════ */
+(function basement(){
+  const B={x0:9.0,x1:21.5,z0:0,z1:8.5}, oy=T_OUT/2, y=FLOOR_S;
+  const lift=g=>{ g.position.y+=y; return g; };
+  const bw=(ax,az,bx,bz,o)=>{ o=Object.assign({h:H_S},o||{}); return lift(wall(ax,az,bx,bz,o)); };
+
+  // deska a podlaha suterénu
+  const sl=new THREE.Mesh(new THREE.BoxGeometry(B.x1-B.x0+1.0,0.35,B.z1-B.z0+1.0),M.stone);
+  sl.position.set((B.x0+B.x1)/2,y-0.175,(B.z0+B.z1)/2); sl.receiveShadow=true; gBase.add(sl);
+
+  // obvodové zdivo suterénu
+  gBase.add(bw(B.x0,oy,B.x1,oy,{t:T_OUT,mat:M.stone,openings:[
+    {from:2.60,to:3.70,y0:0,y1:2.20,door:2},        // vstup do suterénu
+    {from:5.20,to:8.20,y0:0,y1:2.40,door:2}         // vrata do dílny/garáže
+  ]}));
+  gBase.add(bw(B.x1-oy,0,B.x1-oy,B.z1,{t:T_OUT,mat:M.stone,openings:[
+    WIN(1.20,2.20,1.40,2.30), WIN(5.00,6.00,1.40,2.30)
+  ]}));
+  gBase.add(bw(B.x1,B.z1-oy,B.x0,B.z1-oy,{t:T_OUT,mat:M.stone}));
+  gBase.add(bw(B.x0+oy,B.z1,B.x0+oy,0,{t:T_OUT,mat:M.stone}));
+
+  // vnitřní příčky suterénu
+  gBase.add(bw(9.500,5.625,17.870,5.625,{openings:[DOOR(1.10),DOOR(3.05),DOOR(5.20)]}));
+  gBase.add(bw(11.825,5.750,11.825,8.000,{}));
+  gBase.add(bw(13.725,5.600,13.725,8.000,{}));
+  gBase.add(bw(18.375,0.500,18.375,7.900,{t:0.25,mat:M.stone,openings:[DOOR(2.30),DOOR(5.40)]}));
+  gBase.add(bw(18.500,3.575,21.000,3.575,{}));
+
+  // strop suterénu = podlaha 1.NP
+  const ce=new THREE.Mesh(new THREE.BoxGeometry(B.x1-B.x0,0.45,B.z1-B.z0),M.wallIn);
+  ce.position.set((B.x0+B.x1)/2,y+H_S+0.225,(B.z0+B.z1)/2); ce.receiveShadow=true; gBaseCeil.add(ce);
+
+  // podlahy místností
+  ROOMS_S.forEach(r=>{
+    const m=new THREE.Mesh(new THREE.BoxGeometry(r.x1-r.x0,0.04,r.z1-r.z0),
+      new THREE.MeshLambertMaterial({color:new THREE.Color(r.c)}));
+    m.position.set(r.cx,y+0.02,r.cz); m.receiveShadow=true; m.userData.room=r; gBaseFloor.add(m);
+  });
+
+  // schodiště z 1.S do 1.NP (v chodbě 1S01, stoupá podél +X)
+  const steps=18, rise=(H_S+0.45)/steps, run=0.26;
+  for(let i=0;i<steps;i++){
+    const st=new THREE.Mesh(new THREE.BoxGeometry(run,0.05,1.10),M.woodD);
+    st.position.set(14.10+i*run,y+(i+1)*rise,7.30); st.castShadow=true; gBase.add(st);
+  }
+
+  const bx=(x,yy,z,w,h,d,mat,rot)=>box(x,y+yy,z,w,h,d,mat,rot,gBaseFurn);
+  // dílna / garáž
+  bx(14.6,0,2.60,1.85,0.72,4.50,new THREE.MeshLambertMaterial({color:0xd8dde1}),Math.PI/2);
+  bx(14.6,0.72,2.45,1.60,0.55,2.20,new THREE.MeshLambertMaterial({color:0x2f3438}),Math.PI/2);
+  bx(10.6,0,0.95,2.00,0.90,0.70,M.woodD,0);            // ponk
+  bx(10.6,1.35,0.70,2.00,0.90,0.30,M.wallIn,0);        // police nad ponkem
+  bx(17.6,0,3.20,0.60,2.00,3.60,M.metal,0);            // regály
+  // sklad dílna
+  bx(10.6,0,7.60,2.00,2.00,0.60,M.metal,0);
+  // koupelna 1S02
+  bx(12.3,0.02,7.40,0.90,0.04,0.90,M.metal,0);
+  bx(12.3,0.06,7.40,0.90,2.00,0.90,M.glass,0);
+  bx(13.2,0.80,6.20,0.50,0.12,0.38,M.white,0);
+  // technika 1S05
+  bx(19.1,0.30,7.30,0.70,1.60,0.70,M.metal,0);         // zásobník
+  bx(20.4,0.30,7.30,0.70,1.60,0.70,M.metal,0);
+  bx(19.7,0,4.40,2.20,1.80,0.45,M.wallIn,0);           // rozvaděče
+  // černá kuchyně 1S06
+  bx(19.2,0,1.10,1.20,0.90,0.65,M.white,0);
+  bx(19.2,0.90,1.10,1.24,0.06,0.68,M.dark,0);
+  bx(20.6,0,2.80,0.65,1.90,0.70,M.white,0);            // mrazák
+
+  // svítidla suterénu
+  [[13.5,3.0],[11.0,6.9],[15.8,6.8],[19.7,5.8],[19.7,2.0]].forEach(pt=>{
+    const l=new THREE.PointLight(0xffe9c8,0,8,2);
+    l.position.set(pt[0],y+2.35,pt[1]); gLamps.add(l);
+    const b=new THREE.Mesh(new THREE.SphereGeometry(0.07,10,8),new THREE.MeshBasicMaterial({color:0xfff3d8}));
+    b.position.copy(l.position); b.visible=false; l.userData.bulb=b; gLamps.add(b);
+  });
+})();
+
 /* ═══ kamera a ovládání ═══ */
 const TARGET0=new THREE.Vector3(10.75,1.2,4.25);
 const orbit={target:TARGET0.clone(),r:32,theta:-2.05,phi:0.92};
@@ -607,44 +717,55 @@ function pick(e){
   ndc.x=((e.clientX-r.left)/r.width)*2-1;
   ndc.y=-((e.clientY-r.top)/r.height)*2+1;
   ray.setFromCamera(ndc,camera);
-  const hits=ray.intersectObjects(gFloor.children.concat(gOut.children.filter(o=>o.userData.room)),false);
+  const hits=ray.intersectObjects(gFloor.children
+    .concat(gOut.children.filter(o=>o.userData.room),gBaseFloor.children),false);
   if(hits.length) selectRoom(hits[0].object.userData.room.id);
 }
 
 /* ═══ UI ═══ */
-let selected=null;
+let selected=null, level='np';
 const labels=document.getElementById('labels'), labelEls={};
 const listEl=document.getElementById('roomList');
 const fmt=v=>v.toFixed(2).replace('.',',');
 
-ROOMS.forEach(r=>{
+function addSection(title){
+  const h=document.createElement('div'); h.className='sec'; h.textContent=title;
+  h.dataset.sec='1'; listEl.appendChild(h); return h;
+}
+const secNP=addSection('1.NP');
+ROOMS.forEach(r=>listEl.appendChild(roomBtn(r)));
+const secS=addSection('1.S — suterén');
+ROOMS_S.forEach(r=>listEl.appendChild(roomBtn(r)));
+function roomBtn(r){
   const b=document.createElement('button');
-  b.className='room'+(r.out?' out':''); b.dataset.id=r.id;
+  b.className='room'+(r.out?' out':''); b.dataset.id=r.id; b.dataset.lvl=r.lvl;
   b.innerHTML='<i style="background:'+r.c+'"></i><u>'+r.n+'</u><span>'+r.name+'</span><em>'+fmt(r.a)+' m²</em>';
   b.addEventListener('click',()=>selectRoom(r.id,true));
-  listEl.appendChild(b);
   const l=document.createElement('div');
   l.className='lbl';
   l.innerHTML='<u>'+r.n+'</u><b>'+r.name+'</b><em>'+fmt(r.a)+' m²</em>';
   labels.appendChild(l); labelEls[r.id]=l;
-});
+  return b;
+}
 
 function floorMesh(id){
-  return gFloor.children.concat(gOut.children).find(m=>m.userData.room&&m.userData.room.id===id);
+  return gFloor.children.concat(gOut.children,gBaseFloor.children)
+    .find(m=>m.userData.room&&m.userData.room.id===id);
 }
 function selectRoom(id,fly){
   selected=(selected===id)?null:id;
-  ROOMS.forEach(r=>{
+  ALL.forEach(r=>{
     const on=r.id===selected;
     listEl.querySelector('[data-id="'+r.id+'"]').classList.toggle('active',on);
     labelEls[r.id].classList.toggle('on',on);
     const m=floorMesh(r.id);
     if(m){ m.material.emissive=new THREE.Color(on?0x1d7a58:0x000000); m.material.emissiveIntensity=on?0.35:0; }
   });
-  const r=ROOMS.find(x=>x.id===selected);
+  const r=ALL.find(x=>x.id===selected);
   if(r&&fly!==false){
-    if(mode==='walk') walk.pos.set(r.cx,1.62,r.cz);
-    else flyTo(new THREE.Vector3(r.cx,1.2,r.cz),Math.max(9,Math.max(r.x1-r.x0,r.z1-r.z0)*2.7));
+    if(r.lvl!==level&&level!=='both') setLevel(r.lvl);
+    if(mode==='walk') walk.pos.set(r.cx,r.y+1.62,r.cz);
+    else flyTo(new THREE.Vector3(r.cx,r.y+1.2,r.cz),Math.max(9,Math.max(r.x1-r.x0,r.z1-r.z0)*2.7));
   }
 }
 
@@ -661,10 +782,10 @@ function toggle(id,fn){
   fn(on);
   b.addEventListener('click',()=>{on=!on;b.setAttribute('aria-pressed',String(on));fn(on);});
 }
-toggle('tgRoof', on=>{gRoof.visible=on;gCeil.visible=on;interiorLight();});
-toggle('tgWalls',on=>{gInner.visible=on;});
-toggle('tgFurn', on=>{gFurn.visible=on;});
-toggle('tgOut',  on=>{gOut.visible=on;});
+toggle('tgRoof', on=>{const np=level!=='s';gRoof.visible=on&&np;gCeil.visible=on&&np;gBaseCeil.visible=on&&level!=='np';interiorLight();});
+toggle('tgWalls',on=>{gInner.visible=on&&level!=='s';});
+toggle('tgFurn', on=>{gFurn.visible=on&&level!=='s';gBaseFurn.visible=on&&level!=='np';});
+toggle('tgOut',  on=>{gOut.visible=on&&level!=='s';});
 toggle('tgLbl',  on=>{labels.style.display=on?'':'none';});
 toggle('tgNight',on=>{
   if(on){
@@ -681,6 +802,40 @@ toggle('tgNight',on=>{
     nightOn=false; interiorLight();
   }
 });
+
+function setLevel(lv){
+  level=lv;
+  const np=(lv==='np'||lv==='both'), su=(lv==='s'||lv==='both');
+  [gShell,gFloor,gFurn,gOut].forEach(g=>g.visible=np);
+  gInner.visible=np&&document.getElementById('tgWalls').getAttribute('aria-pressed')==='true';
+  gFurn.visible=np&&document.getElementById('tgFurn').getAttribute('aria-pressed')==='true';
+  gOut.visible=np&&document.getElementById('tgOut').getAttribute('aria-pressed')==='true';
+  const roofOn=document.getElementById('tgRoof').getAttribute('aria-pressed')==='true';
+  gRoof.visible=np&&roofOn; gCeil.visible=np&&roofOn;
+  gBase.visible=su; gBaseFloor.visible=su;
+  gBaseCeil.visible=su&&roofOn;
+  ground.visible=!su; slab.visible=!su;
+  gBaseFurn.visible=su&&document.getElementById('tgFurn').getAttribute('aria-pressed')==='true';
+  document.querySelectorAll('#levels .lv').forEach(b=>b.classList.toggle('on',b.dataset.lvl===lv));
+  document.querySelectorAll('#roomList .room').forEach(b=>{
+    b.style.display=(lv==='both'||b.dataset.lvl===lv)?'':'none';
+  });
+  document.querySelectorAll('#roomList .sec').forEach((h,i)=>{
+    h.style.display=(lv==='both')?'':'none';
+  });
+  document.getElementById('roomsHead').textContent=
+    lv==='np'?'Místnosti 1.NP':lv==='s'?'Místnosti 1.S':'Místnosti — obě podlaží';
+  document.getElementById('lvinfo').textContent=
+    lv==='np'?'Užitná plocha 134,56 m² · 15 místností':
+    lv==='s' ?'Užitná plocha 80,87 m² · 6 místností · podlaha −3,25 m':
+              'Celkem 215,43 m² užitné plochy ve dvou podlažích';
+  if(lv==='s'&&mode!=='walk'){ orbit.target.set(15.25,FLOOR_S+1.2,4.25); }
+  else if(lv==='np'&&mode!=='walk'){ orbit.target.copy(TARGET0); }
+  if(mode==='walk') walk.pos.y=(lv==='s'?FLOOR_S:0)+1.62;
+  interiorLight();
+}
+document.querySelectorAll('#levels .lv').forEach(b=>
+  b.addEventListener('click',()=>setLevel(b.dataset.lvl)));
 
 function setMode(m){
   mode=m;
@@ -742,8 +897,8 @@ function loop(now){
 
   if(labels.style.display!=='none'){
     const w=view.clientWidth,h=view.clientHeight,placed=[];
-    ROOMS.filter(r=>!r.out||gOut.visible).map(r=>{
-      tmp.set(r.cx,1.30,r.cz);
+    ALL.filter(r=>(level==='both'||r.lvl===level)&&(!r.out||gOut.visible)).map(r=>{
+      tmp.set(r.cx,r.y+1.30,r.cz);
       const d=camera.position.distanceTo(tmp);
       tmp.project(camera);
       return {r,d,x:(tmp.x*0.5+0.5)*w,y:(-tmp.y*0.5+0.5)*h,behind:tmp.z>1};
@@ -761,11 +916,13 @@ function loop(now){
       l.style.display=''; l.style.left=o.x+'px'; l.style.top=o.y+'px';
       l.style.opacity=o.d>68?0.3:1;
     });
-    ROOMS.filter(r=>r.out&&!gOut.visible).forEach(r=>labelEls[r.id].style.display='none');
+    ALL.filter(r=>(level!=='both'&&r.lvl!==level)||(r.out&&!gOut.visible))
+       .forEach(r=>labelEls[r.id].style.display='none');
   }
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
+setLevel('np');
 setTimeout(()=>document.getElementById('loading').classList.add('gone'),260);
 })();
 </script>
