@@ -81,6 +81,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 .compass{position:absolute;right:18px;top:18px;width:62px;height:62px;pointer-events:none;opacity:.9}
 .mode-note{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(16,24,20,.85);color:#fff;border-radius:999px;padding:7px 16px;font-size:.79rem;font-weight:650;opacity:0;transition:opacity .25s;pointer-events:none;max-width:80%}
 .mode-note.show{opacity:1}
+.here{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);background:rgba(16,24,20,.72);color:#fff;border-radius:999px;padding:7px 18px;font-size:.86rem;font-weight:750;letter-spacing:.01em;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .loading{position:absolute;inset:0;display:grid;place-items:center;background:var(--paper);font-weight:750;color:var(--muted);z-index:4;transition:opacity .4s}
 .loading.gone{opacity:0;pointer-events:none}
 .sidetoggle{display:none}
@@ -165,6 +166,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
       </g>
     </svg>
     <div class="mode-note" id="modeNote"></div>
+    <div class="here" id="here"></div>
     <div class="hud">
       <button class="chip" id="btnWalk">🚶 Procházka</button>
       <button class="chip" id="btnTop">▦ Půdorys</button>
@@ -222,9 +224,22 @@ const ROOMS_S=[
   {n:'1S05', name:'Technika',            x0:18.500,x1:21.000, z0:3.650,z1:7.900, a:10.62, c:'#dcdfe2'},
   {n:'1S06', name:'Černá kuchyně / zázemí',x0:18.500,x1:21.000, z0:0.500,z1:3.500, a:7.50, c:'#dfe3d6'}
 ];
+/* skutečná podlaha podle účelu místnosti (procházka) vs. barevné
+   rozlišení (půdorys a přehled) */
+const FLOORMAT={
+  wood:'#c2a077', tile:'#d6d2c8', concrete:'#b6b6b1', stone:'#bdb6a8', grass:'#8fa878'
+};
+const FLOORTYPE={
+  '101':'tile','102':'tile','103':'tile','104':'tile','105':'wood','106':'wood',
+  '107':'wood','108':'wood','109':'wood','110':'tile','111':'wood','112':'stone',
+  '113':'tile','114':'stone','115':'stone',
+  '1S01':'concrete','1S02':'tile','1S03':'concrete','1S04':'concrete',
+  '1S05':'concrete','1S06':'tile'
+};
 ROOMS.forEach(r=>r.lvl='np'); ROOMS_S.forEach(r=>r.lvl='s');
 const ALL=ROOMS.concat(ROOMS_S);
-ALL.forEach(r=>{r.id='r'+r.n;r.cx=(r.x0+r.x1)/2;r.cz=(r.z0+r.z1)/2;r.y=(r.lvl==='s'?FLOOR_S:0);});
+ALL.forEach(r=>{r.id='r'+r.n;r.cx=(r.x0+r.x1)/2;r.cz=(r.z0+r.z1)/2;r.y=(r.lvl==='s'?FLOOR_S:0);
+  r.real=FLOORMAT[FLOORTYPE[r.n]||'tile'];});
 
 /* ── scéna ── */
 const view=document.getElementById('view');
@@ -294,15 +309,26 @@ const slab=new THREE.Mesh(new THREE.BoxGeometry(23.5,0.30,10.5),M.stone);
 slab.position.set(10.75,-0.15,4.25); slab.receiveShadow=true; WORLD.add(slab);
 
 /* ── stavitel stěn s otvory ──────────────────────────────────── */
+/* Kolizní obdélníky pro procházku. Registrují se jen plné části stěn,
+   které skutečně brání průchodu (zasahují do výšky 0,25–1,75 m). */
+const WALLS=[]; let WALL_LVL='np';
 function wall(ax,az,bx,bz,o){
   o=o||{};
   const t=o.t||T_IN, h=o.h||H, mat=o.mat||M.part;
   const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz);
+  const ux=len?dx/len:1, uz=len?dz/len:0;
   const g=new THREE.Group();
   const add=(from,to,y0,y1,m)=>{
     const w=to-from; if(w<=0.004||y1-y0<=0.004) return;
     const b=new THREE.Mesh(new THREE.BoxGeometry(w,y1-y0,t),m||mat);
     b.position.set(from+w/2,(y0+y1)/2,0); b.castShadow=true; b.receiveShadow=true; g.add(b);
+    if(y0<1.75&&y1>0.25) collider(from,to);
+  };
+  const collider=(from,to)=>{
+    const w=to-from, mid=(from+to)/2;
+    const cx=ax+ux*mid, cz=az+uz*mid;
+    const hx=Math.abs(ux)>0.5?w/2:t/2, hz=Math.abs(ux)>0.5?t/2:w/2;
+    WALLS.push({x0:cx-hx,x1:cx+hx,z0:WZ(cz+hz),z1:WZ(cz-hz),lvl:WALL_LVL});
   };
   const ops=(o.openings||[]).slice().sort((a,b)=>a.from-b.from);
   let cur=0;
@@ -312,6 +338,7 @@ function wall(ax,az,bx,bz,o){
     if(op.y1<h-0.004) add(op.from,op.to,op.y1,h);
     const w=op.to-op.from, hh=op.y1-op.y0;
     if(op.glass){
+      if(op.y0<1.75&&op.y1>0.25) collider(op.from,op.to);
       const pane=new THREE.Mesh(new THREE.PlaneGeometry(w-0.09,hh-0.09),M.glass);
       pane.position.set(op.from+w/2,(op.y0+op.y1)/2,0); g.add(pane);
       const fr=0.06;
@@ -321,9 +348,17 @@ function wall(ax,az,bx,bz,o){
         b.position.set(f[0],f[1],0); g.add(b);
       });
     }
-    if(op.door){
-      const d=new THREE.Mesh(new THREE.BoxGeometry(w-0.07,hh-0.05,0.042),op.door===2?M.woodD:M.wood);
+    if(op.door===2){                      // venkovní dveře a vrata zůstávají v líci
+      const d=new THREE.Mesh(new THREE.BoxGeometry(w-0.07,hh-0.05,0.042),M.woodD);
       d.position.set(op.from+w/2,(op.y0+op.y1)/2,0); d.castShadow=true; g.add(d);
+    }else if(op.door){                     // vnitřní dveře — otvor se zárubní (průchozí)
+      const fr=0.055, dp=t+0.03;
+      [[op.from+fr/2,(op.y0+op.y1)/2,fr,hh],
+       [op.to-fr/2,(op.y0+op.y1)/2,fr,hh],
+       [op.from+w/2,op.y1-fr/2,w,fr]].forEach(f=>{
+        const b=new THREE.Mesh(new THREE.BoxGeometry(f[2],f[3],dp),M.woodD);
+        b.position.set(f[0],f[1],0); g.add(b);
+      });
     }
     cur=op.to;
   });
@@ -423,8 +458,9 @@ ROOMS.forEach(r=>{
     p.rotation.x=s*Math.atan2(RIDGE-EAVE,RIDGE_Z+OVER);
     p.castShadow=true; gRoof.add(p);
   });
-  const ch=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.17,2.4,16),M.dark);
-  ch.position.set(9.9,RIDGE+0.7,RIDGE_Z-0.8); ch.castShadow=true; gRoof.add(ch);
+  // komín vychází z kachlových kamen v obytném prostoru (výkres: x 9,4 · z 5,4)
+  const ch=new THREE.Mesh(new THREE.BoxGeometry(0.42,2.6,0.42),M.dark);
+  ch.position.set(9.40,RIDGE+0.15,5.40); ch.castShadow=true; gRoof.add(ch);
 })();
 
 /* ── venkovní části: terasa, WC, parkovací stání, závětří ── */
@@ -486,68 +522,77 @@ function chair(x,z,rot){
   box(x+Math.sin(rot||0)*0.2,0.47,z-Math.cos(rot||0)*0.2,0.46,0.46,0.05,M.woodD,rot);
 }
 
-/* 111 Obytný prostor — kuchyň u severní stěny, jídelna, obývací část */
-box(7.6,0,7.55,5.4,0.90,0.65,M.white,0);            // kuchyňská linka
-box(7.6,0.90,7.55,5.44,0.06,0.68,M.dark,0);
-box(7.6,1.45,7.80,4.2,1.00,0.38,M.wallIn,0);        // horní skříňky
-box(7.4,0,6.10,3.0,0.90,0.95,M.white,0);            // ostrůvek
-box(7.4,0.90,6.10,3.08,0.06,1.02,M.dark,0);
-(function table(){                                     // jídelní stůl 1,1 × 2,6 m
-  box(5.9,0.72,3.60,1.10,0.06,2.60,M.woodD,0);
-  [[5.45,2.45],[6.35,2.45],[5.45,4.75],[6.35,4.75]].forEach(l=>
+/* ── vybavení podle výkresu 1.NP (pozice odečtené z popisků a kót) ── */
+
+/* 111 Obytný prostor: kuchyňská linka u severní stěny, ostrůvek, jídelna,
+   obývací část a kachlový krb do výšky hřebene (výkres: x 9,4 · z 5,4) */
+box(6.85,0,7.68,4.70,0.90,0.65,M.white,0);          // linka 4750 mm od x=4500
+box(6.85,0.90,7.68,4.74,0.06,0.68,M.dark,0);
+box(6.85,1.45,7.86,4.20,1.00,0.36,M.wallIn,0);      // horní skříňky
+box(5.35,0.92,7.66,0.80,0.03,0.45,M.metal,0);       // dřez
+box(7.90,0.93,7.66,0.60,0.02,0.50,M.dark,0);        // varná deska
+box(6.60,0,6.10,2.40,0.90,1.00,M.white,0);          // ostrůvek 2400 mm
+box(6.60,0.90,6.10,2.46,0.06,1.06,M.dark,0);
+(function table(){                                   // jídelní stůl
+  box(6.10,0.72,3.40,1.00,0.06,2.40,M.woodD,0);
+  [[5.65,2.30],[6.55,2.30],[5.65,4.50],[6.55,4.50]].forEach(l=>
     box(l[0],0,l[1],0.08,0.72,0.08,M.woodD,0));
 })();
-[[5.05,2.55],[5.05,3.60],[5.05,4.65]].forEach(p=>chair(p[0],p[1],Math.PI/2));
-[[6.75,2.55],[6.75,3.60],[6.75,4.65]].forEach(p=>chair(p[0],p[1],-Math.PI/2));
-box(9.30,0,2.10,0.95,0.72,2.40,M.fabric,0);         // sedačka
-box(9.65,0.72,2.10,0.25,0.48,2.40,M.soft,0);
-box(7.90,0,2.10,0.60,0.36,1.10,M.woodD,0);          // konferenční stolek
-box(9.95,0,5.20,0.70,RIDGE-0.4,0.70,M.stone,0);     // kachlový krb do výšky hřebene
-box(5.10,0,1.10,0.45,0.50,1.80,M.dark,0);           // TV komoda
-box(5.05,0.55,1.10,0.06,0.70,1.25,M.dark,0);
+[[5.30,2.55],[5.30,3.40],[5.30,4.25]].forEach(c=>chair(c[0],c[1],Math.PI/2));
+[[6.90,2.55],[6.90,3.40],[6.90,4.25]].forEach(c=>chair(c[0],c[1],-Math.PI/2));
+box(9.40,0,5.40,0.85,RIDGE-0.15,0.72,M.stone,0);    // kachlový krb do výšky hřebene
+box(8.95,0,2.30,0.95,0.70,2.20,M.fabric,0);         // sedačka u krbu
+box(9.35,0.70,2.30,0.24,0.46,2.20,M.soft,0);
+box(7.60,0,2.30,0.60,0.36,1.10,M.woodD,0);          // konferenční stolek
+box(7.18,0,0.72,1.80,0.45,0.42,M.woodD,0);          // parapetní sezení (výkres: x 7175)
+box(5.10,0,1.20,0.42,0.50,1.70,M.dark,0);           // TV komoda
+box(5.06,0.55,1.20,0.05,0.68,1.20,M.dark,0);
 
 /* 110 Spíž */
-box(9.70,0,7.10,0.55,2.10,1.55,M.wallIn,0);
+box(9.85,0,7.10,0.50,2.10,1.50,M.wallIn,0);
 
-/* 101 Zádveří */
-box(10.95,0,6.70,0.55,2.20,2.30,M.wallIn,0);        // úložný prostor
-box(12.45,0,7.20,0.50,0.45,1.40,M.woodD,0);         // sedák
+/* 101 Zádveří — sedák s věšáky a policemi (výkres: x 12644 · z 5809) */
+box(10.96,0,6.98,0.55,2.20,1.90,M.wallIn,0);        // úložný prostor (x 10955 · z 6975)
+box(12.64,0,5.81,0.90,0.45,0.42,M.woodD,0);         // sedák
+box(12.64,1.10,5.66,0.90,1.10,0.12,M.wood,0);       // věšáky / police
 
-/* 102 Prádelna — pračka + sušička */
-box(13.70,0,6.35,0.62,0.85,0.62,M.white,0);
-box(14.35,0,6.35,0.62,0.85,0.62,M.white,0);
+/* 102 Prádelna — pračka a sušička (výkres: x 13953 · z 6069) */
+box(13.62,0,6.07,0.62,0.85,0.62,M.white,0);
+box(14.29,0,6.07,0.62,0.85,0.62,M.white,0);
 
 /* 103 WC */
 box(15.10,0,6.30,0.40,0.42,0.60,M.white,0);
 box(15.85,0.80,6.35,0.50,0.12,0.38,M.white,0);
 
 /* 104 Koupelna */
-box(16.60,0,7.30,0.75,0.55,1.70,M.white,0);         // vana
-box(17.90,0.02,7.40,1.00,0.04,1.00,M.metal,0);      // sprcha
-box(17.90,0.06,7.40,1.00,2.00,1.00,M.glass,0);
-box(17.30,0,5.75,1.60,0.85,0.50,M.woodD,0);         // umyvadlová deska
-box(17.30,0.85,5.75,1.64,0.10,0.54,M.white,0);
+box(16.60,0,7.35,0.75,0.55,1.70,M.white,0);         // vana
+box(17.95,0.02,7.45,1.00,0.04,1.00,M.metal,0);      // sprchový kout
+box(17.95,0.06,7.45,1.00,2.00,1.00,M.glass,0);
+box(17.30,0,5.78,1.60,0.85,0.50,M.woodD,0);         // umyvadlová deska
+box(17.30,0.85,5.78,1.64,0.10,0.54,M.white,0);
 
-/* 105 Šatna */
-box(19.55,0,6.70,0.60,2.20,2.40,M.wallIn,0);
-box(20.75,0,6.70,0.60,2.20,2.40,M.wallIn,0);
+/* 105 Šatna — úložné prostory po obvodu (výkres: x 20698 · z 6965) */
+box(19.60,0,6.97,0.60,2.20,1.90,M.wallIn,0);
+box(20.75,0,6.97,0.60,2.20,1.90,M.wallIn,0);
 
-/* 106 Ložnice */
-box(19.40,0,2.60,2.00,0.42,2.10,M.woodD,Math.PI/2);
-box(19.40,0.42,2.60,1.95,0.24,2.00,M.white,Math.PI/2);
-box(20.25,0.66,2.60,0.45,0.14,1.70,M.fabric,Math.PI/2);
-box(18.10,0,1.30,0.45,0.50,0.42,M.wood,0);
-box(18.10,0,3.90,0.45,0.50,0.42,M.wood,0);
-box(18.10,0,4.75,1.80,2.10,0.60,M.wallIn,0);
+/* 106 Ložnice — postel, noční stolky, úložné prostory (x 20692 · z 4720 a x 19500 · z 3945) */
+box(19.30,0,2.20,2.10,0.42,2.00,M.woodD,0);
+box(19.30,0.42,2.20,2.00,0.24,1.90,M.white,0);
+box(19.30,0.66,1.35,1.70,0.14,0.42,M.fabric,0);
+box(18.05,0,1.05,0.45,0.50,0.42,M.wood,0);
+box(20.55,0,1.05,0.45,0.50,0.42,M.wood,0);
+box(20.69,0,4.72,0.55,2.20,1.00,M.wallIn,0);
+box(19.50,0,3.95,1.80,2.20,0.55,M.wallIn,0);
 
-/* 107 + 108 Pokoje */
-[[10.65],[14.20]].forEach((p,i)=>{
-  const x=p[0];
-  box(x+0.55,0,1.55,1.00,0.40,2.00,M.woodD,0);      // postel
-  box(x+0.55,0.40,1.55,0.95,0.20,1.95,M.white,0);
-  box(x+2.35,0,0.95,1.30,0.74,0.60,M.wood,0);       // psací stůl
-  chair(x+2.35,1.55,Math.PI);
-  box(x+2.85,0,3.55,0.55,2.00,0.90,M.wallIn,0);     // skříň
+/* 107 + 108 Pokoje — postel, stůl, skříň, parapetní sezení (x 12436 / 15849 · z 681) */
+[[10.65,12.44],[14.20,15.85]].forEach(pr=>{
+  const x=pr[0], seat=pr[1];
+  box(x+0.60,0,1.70,1.05,0.40,2.00,M.woodD,0);
+  box(x+0.60,0.40,1.70,1.00,0.20,1.95,M.white,0);
+  box(x+2.45,0,1.05,1.30,0.74,0.60,M.wood,0);
+  chair(x+2.45,1.65,Math.PI);
+  box(x+2.90,0,3.55,0.55,2.00,0.95,M.wallIn,0);
+  box(seat,0,0.72,1.60,0.45,0.42,M.woodD,0);        // parapetní sezení
 });
 
 /* 113 WC u terasy */
@@ -578,6 +623,7 @@ box(2.00,0,4.20,1.00,0.75,2.60,M.woodD,0,gOut);
 (function basement(){
   const B={x0:9.0,x1:21.5,z0:0,z1:8.5}, oy=T_OUT/2, y=FLOOR_S;
   const lift=g=>{ g.position.y+=y; return g; };
+  WALL_LVL='s';
   const bw=(ax,az,bx,bz,o)=>{ o=Object.assign({h:H_S},o||{}); return lift(wall(ax,az,bx,bz,o)); };
 
   // deska a podlaha suterénu
@@ -643,6 +689,7 @@ box(2.00,0,4.20,1.00,0.75,2.60,M.woodD,0,gOut);
   bx(20.6,0,2.80,0.65,1.90,0.70,M.white,0);            // mrazák
 
   // svítidla suterénu
+  WALL_LVL='np';
   [[13.5,3.0],[11.0,6.9],[15.8,6.8],[19.7,5.8],[19.7,2.0]].forEach(pt=>{
     const l=new THREE.PointLight(0xffe9c8,0,8,2);
     l.position.set(pt[0],y+2.35,pt[1]); gLamps.add(l);
@@ -661,8 +708,33 @@ WORLD.traverse(o=>{
 const TARGET0=new THREE.Vector3(10.75,1.2,WZ(4.25));
 const orbit={target:TARGET0.clone(),r:32,theta:2.05,phi:0.92};
 let mode='orbit';
-const walk={pos:new THREE.Vector3(10.0,1.62,WZ(4.60)),yaw:Math.PI/2,pitch:-0.03};
+const EYE=1.66, BODY=0.28;            // výška očí a poloměr těla
+const walk={pos:new THREE.Vector3(8.60,EYE,WZ(4.30)),yaw:-Math.PI/2,pitch:-0.02,
+            vel:new THREE.Vector3(),bob:0,floor:0};
 const keys=Object.create(null);
+
+/* vysunutí z kolizních obdélníků aktivního podlaží */
+function resolveCollisions(pos){
+  const lvl=(level==='s')?'s':'np';
+  for(let i=0;i<WALLS.length;i++){
+    const w=WALLS[i];
+    if(w.lvl!==lvl&&level!=='both') continue;
+    if(pos.x<w.x0-BODY||pos.x>w.x1+BODY||pos.z<w.z0-BODY||pos.z>w.z1+BODY) continue;
+    const cx=Math.max(w.x0,Math.min(pos.x,w.x1));
+    const cz=Math.max(w.z0,Math.min(pos.z,w.z1));
+    const dx=pos.x-cx, dz=pos.z-cz, d2=dx*dx+dz*dz;
+    if(d2>=BODY*BODY) continue;
+    if(d2>1e-8){
+      const d=Math.sqrt(d2);
+      pos.x=cx+dx/d*BODY; pos.z=cz+dz/d*BODY;
+    }else{                                   // uvnitř stěny — ven nejkratší cestou
+      const l=pos.x-w.x0, r=w.x1-pos.x, u=pos.z-w.z0, o=w.z1-pos.z;
+      const m=Math.min(l,r,u,o);
+      if(m===l) pos.x=w.x0-BODY; else if(m===r) pos.x=w.x1+BODY;
+      else if(m===u) pos.z=w.z0-BODY; else pos.z=w.z1+BODY;
+    }
+  }
+}
 
 function applyCamera(){
   if(mode==='orbit'){
@@ -672,8 +744,8 @@ function applyCamera(){
                         target.z+r*Math.sin(phi)*Math.sin(theta));
     camera.lookAt(target);
   }else{
-    camera.position.copy(walk.pos);
-    camera.lookAt(walk.pos.clone().add(new THREE.Vector3(
+    camera.position.set(walk.pos.x,walk.pos.y+walk.bob,walk.pos.z);
+    camera.lookAt(camera.position.clone().add(new THREE.Vector3(
       Math.cos(walk.pitch)*Math.sin(walk.yaw),Math.sin(walk.pitch),Math.cos(walk.pitch)*Math.cos(walk.yaw))));
   }
 }
@@ -699,7 +771,22 @@ el.addEventListener('pointermove',e=>{
     orbit.phi=Math.max(0.12,Math.min(1.52,orbit.phi+dy*0.005));
   }
 });
-el.addEventListener('pointerup',e=>{ if(drag&&drag.moved<6&&mode==='orbit') pick(e); drag=null; });
+el.addEventListener('pointerup',e=>{
+  if(drag&&drag.moved<6){
+    if(mode==='orbit') pick(e);
+    else if(document.pointerLockElement!==el&&el.requestPointerLock) el.requestPointerLock();
+  }
+  drag=null;
+});
+document.addEventListener('mousemove',e=>{
+  if(mode!=='walk'||document.pointerLockElement!==el) return;
+  walk.yaw-=e.movementX*0.0022;
+  walk.pitch=Math.max(-1.25,Math.min(1.25,walk.pitch-e.movementY*0.0019));
+});
+document.addEventListener('pointerlockchange',()=>{
+  const on=document.pointerLockElement===el;
+  if(mode==='walk') note(on?'Myš ovládá pohled · Esc uvolní kurzor':'Kurzor uvolněn · klikněte do okna pro rozhlížení');
+});
 el.addEventListener('contextmenu',e=>e.preventDefault());
 el.addEventListener('wheel',e=>{
   e.preventDefault();
@@ -723,7 +810,8 @@ el.addEventListener('pointermove',e=>{
     lastPinch=d;
   }else lastPinch=0;
 });
-window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true; if(e.key==='Escape'&&mode==='walk') setMode('orbit');});
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;
+  if(e.key==='Escape'&&mode==='walk'&&document.pointerLockElement!==el) setMode('orbit');});
 window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
 
 const ray=new THREE.Raycaster(), ndc=new THREE.Vector2();
@@ -852,12 +940,22 @@ function setLevel(lv){
 document.querySelectorAll('#levels .lv').forEach(b=>
   b.addEventListener('click',()=>setLevel(b.dataset.lvl)));
 
+function floorColors(realistic){
+  ALL.forEach(r=>{
+    const mesh=floorMesh(r.id);
+    if(mesh) mesh.material.color.set(realistic?r.real:r.c);
+  });
+}
 function setMode(m){
   mode=m;
   document.getElementById('btnWalk').classList.toggle('on',m==='walk');
+  camera.fov=(m==='walk')?70:48; camera.updateProjectionMatrix();
+  floorColors(m==='walk');
+  if(m!=='walk'&&document.pointerLockElement===el) document.exitPointerLock();
   if(m==='walk'){
-    walk.pos.set(10.0,1.62,WZ(4.60)); walk.yaw=Math.PI/2; walk.pitch=-0.03;
-    note('Procházka: W A S D pohyb · Shift běh · táhnutí myší rozhlížení · Esc zpět');
+    walk.pos.set(8.60,((level==='s')?FLOOR_S:0)+EYE,WZ(4.30));
+    walk.yaw=-Math.PI/2; walk.pitch=-0.02; walk.vel.set(0,0,0);
+    note('W A S D chůze · Shift běh · klik zamkne myš pro rozhlížení · Esc zpět');
     document.getElementById('tgRoof').setAttribute('aria-pressed','true');
     gRoof.visible=true; gCeil.visible=true; interiorLight();
   }else note('Pohled zvenku');
@@ -881,6 +979,7 @@ function resize(){
 window.addEventListener('resize',resize); resize();
 
 const needle=document.getElementById('needle');
+const hereEl=document.getElementById('here');
 const tmp=new THREE.Vector3();
 let last=performance.now();
 function loop(now){
@@ -892,17 +991,33 @@ function loop(now){
     if(k>=1) fly=null;
   }
   if(mode==='walk'){
-    const sp=(keys['shift']?5.0:2.6)*dt;
+    // rychlost chůze 1,4 m/s, běh 3,2 m/s — jako ve skutečnosti
+    const target=new THREE.Vector3();
     const f=new THREE.Vector3(Math.sin(walk.yaw),0,Math.cos(walk.yaw));
     const r=new THREE.Vector3(Math.cos(walk.yaw),0,-Math.sin(walk.yaw));
-    if(keys['w']||keys['arrowup'])    walk.pos.addScaledVector(f,sp);
-    if(keys['s']||keys['arrowdown'])  walk.pos.addScaledVector(f,-sp);
-    if(keys['a']||keys['arrowleft'])  walk.pos.addScaledVector(r,-sp);
-    if(keys['d']||keys['arrowright']) walk.pos.addScaledVector(r,sp);
-    walk.pos.x=Math.max(-5,Math.min(27,walk.pos.x));
-    walk.pos.z=Math.max(-5,Math.min(18,walk.pos.z));
-    walk.pos.y=1.62;
-  }
+    if(keys['w']||keys['arrowup'])    target.add(f);
+    if(keys['s']||keys['arrowdown'])  target.sub(f);
+    if(keys['a']||keys['arrowleft'])  target.sub(r);
+    if(keys['d']||keys['arrowright']) target.add(r);
+    const moving=target.lengthSq()>0.0001;
+    if(moving) target.normalize().multiplyScalar(keys['shift']?3.2:1.4);
+    walk.vel.lerp(target,Math.min(1,dt*12));       // rozjezd a doběh
+    walk.pos.addScaledVector(walk.vel,dt);
+    resolveCollisions(walk.pos);
+    walk.pos.x=Math.max(-6,Math.min(28,walk.pos.x));
+    walk.pos.z=Math.max(-8,Math.min(20,walk.pos.z));
+    walk.floor=(level==='s')?FLOOR_S:0;
+    walk.pos.y=walk.floor+EYE;
+    // houpání kroku podle skutečné rychlosti
+    const sp=walk.vel.length();
+    walk.bob=sp>0.15?Math.sin(now*0.0092*Math.max(1,sp))*0.019*Math.min(1,sp/1.4):walk.bob*0.86;
+    // název místnosti, ve které chodec právě stojí
+    const mz=WZ(walk.pos.z), mx=walk.pos.x;
+    const flr=(walk.floor<0)?'s':'np';
+    const here=ALL.find(q=>q.lvl===flr&&mx>=q.x0&&mx<=q.x1&&mz>=q.z0&&mz<=q.z1);
+    hereEl.textContent=here?here.n+'  '+here.name:'';
+    hereEl.style.opacity=here?1:0;
+  }else hereEl.style.opacity=0;
   applyCamera();
   renderer.render(scene,camera);
 
