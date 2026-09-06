@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D model interiéru | Rodinný dům</title>
+<meta name="description" content="Interaktivní 3D model interiéru rodinného domu se sedlovou střechou — dispozice, průchozí prohlídka, plochy místností.">
+<meta name="theme-color" content="#0f1713">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}*{margin:0}
+:root{
+  --ink:#101814;--soft:#3c4a43;--muted:#6d7b74;--paper:#f4efe6;--card:#fffdf8;
+  --line:rgba(16,24,20,.12);--green:#137a5b;--green-bright:#21a77d;
+  --shadow-s:0 4px 18px rgba(16,24,20,.07);--shadow-m:0 18px 44px rgba(16,24,20,.10);
+}
+html,body{height:100%}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+a{color:inherit;text-decoration:none}
+
+.app{position:fixed;inset:0;display:grid;grid-template-columns:312px minmax(0,1fr)}
+
+/* ── panel ── */
+.side{position:relative;z-index:5;background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:auto;box-shadow:var(--shadow-m)}
+.side-head{padding:20px 20px 16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.06em;font-size:.95rem}
+.mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--ink);color:#fff;font-weight:900;font-size:.8rem}
+.side-head h1{margin-top:16px;font-size:1.35rem;line-height:1.15;letter-spacing:-.03em}
+.side-head p{margin-top:8px;color:var(--muted);font-size:.84rem}
+.stats{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,#fff,#fbf8f1);padding:9px 11px}
+.stat small{display:block;color:var(--muted);font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
+.stat b{display:block;margin-top:3px;font-size:1.02rem;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+.group{padding:16px 20px;border-bottom:1px solid var(--line)}
+.group>h2{font-size:.63rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.toggles{margin-top:11px;display:grid;gap:7px}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:9px 12px;font-weight:650;font-size:.86rem;cursor:pointer;user-select:none;transition:border-color .15s,background .15s}
+.tg:hover{background:#faf7f0}
+.tg[aria-pressed="true"]{border-color:rgba(19,122,91,.4);background:#effaf5}
+.sw{flex:none;width:34px;height:19px;border-radius:999px;background:#dfd9cd;position:relative;transition:background .18s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .18s}
+.tg[aria-pressed="true"] .sw{background:var(--green-bright)}
+.tg[aria-pressed="true"] .sw::after{transform:translateX(15px)}
+
+.rooms{margin-top:11px;display:grid;gap:5px}
+.room{display:flex;align-items:center;gap:10px;border:1px solid transparent;border-radius:11px;padding:8px 10px;font-size:.86rem;font-weight:650;cursor:pointer;text-align:left;background:none;font-family:inherit;color:inherit;transition:background .15s,border-color .15s}
+.room:hover{background:#f5f1e9}
+.room.active{background:#effaf5;border-color:rgba(19,122,91,.35)}
+.room i{flex:none;width:11px;height:11px;border-radius:4px}
+.room span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.room em{font-style:normal;color:var(--muted);font-size:.76rem;font-variant-numeric:tabular-nums}
+
+.hint{padding:14px 20px 22px;color:var(--muted);font-size:.78rem}
+.hint b{color:var(--soft);font-weight:750}
+.hint ul{margin-top:7px;padding-left:16px;display:grid;gap:3px}
+.hint .back{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-weight:750;color:var(--green);font-size:.82rem}
+
+/* ── viewport ── */
+.view{position:relative;overflow:hidden;background:linear-gradient(180deg,#dfeaf3,#eef4ef)}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.labels{position:absolute;inset:0;pointer-events:none}
+.lbl{position:absolute;transform:translate(-50%,-50%);background:rgba(255,253,248,.9);border:1px solid var(--line);border-radius:9px;padding:3px 8px;font-size:.72rem;font-weight:750;white-space:nowrap;box-shadow:var(--shadow-s);backdrop-filter:blur(4px)}
+.lbl b{font-weight:800}
+.lbl em{font-style:normal;color:var(--muted);font-weight:650;margin-left:5px;font-variant-numeric:tabular-nums}
+.lbl.on{border-color:rgba(19,122,91,.5);background:#effaf5}
+
+.hud{position:absolute;left:16px;bottom:16px;display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:38px;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;background:rgba(255,253,248,.92);backdrop-filter:blur(8px);padding:0 15px;font-weight:750;font-size:.84rem;cursor:pointer;font-family:inherit;color:inherit;box-shadow:var(--shadow-s);transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translateY(-1px);box-shadow:var(--shadow-m)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mode-note{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(16,24,20,.85);color:#fff;border-radius:999px;padding:7px 16px;font-size:.8rem;font-weight:650;opacity:0;transition:opacity .25s;pointer-events:none}
+.mode-note.show{opacity:1}
+.loading{position:absolute;inset:0;display:grid;place-items:center;background:var(--paper);font-weight:750;color:var(--muted);z-index:4;transition:opacity .4s}
+.loading.gone{opacity:0;pointer-events:none}
+
+.sidetoggle{display:none}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:min(320px,86vw);transform:translateX(-102%);transition:transform .25s ease}
+  .side.open{transform:none}
+  .sidetoggle{display:inline-flex;position:absolute;top:16px;left:16px;z-index:6}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="side-head">
+      <a class="brand" href="/"><span class="mark">V</span> VIKRR</a>
+      <h1>3D model interiéru</h1>
+      <p>Rodinný dům se sedlovou střechou — jedno podlaží, otevřený obytný prostor pod prosklený štít.</p>
+      <div class="stats">
+        <div class="stat"><small>Užitná plocha</small><b id="stArea">—</b></div>
+        <div class="stat"><small>Půdorys</small><b>21 × 9 m</b></div>
+        <div class="stat"><small>Světlá výška</small><b>3,1 m</b></div>
+        <div class="stat"><small>Hřeben</small><b>6,0 m</b></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Zobrazení</h2>
+      <div class="toggles">
+        <button class="tg" id="tgRoof" aria-pressed="false">Střecha <span class="sw"></span></button>
+        <button class="tg" id="tgWalls" aria-pressed="true">Příčky <span class="sw"></span></button>
+        <button class="tg" id="tgFurn" aria-pressed="true">Nábytek <span class="sw"></span></button>
+        <button class="tg" id="tgLbl" aria-pressed="true">Popisky <span class="sw"></span></button>
+        <button class="tg" id="tgNight" aria-pressed="false">Večerní světlo <span class="sw"></span></button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Místnosti</h2>
+      <div class="rooms" id="roomList"></div>
+    </div>
+
+    <div class="hint">
+      <b>Ovládání</b>
+      <ul>
+        <li>Táhnutí myší — otáčení</li>
+        <li>Kolečko / štípnutí — přiblížení</li>
+        <li>Pravé tlačítko nebo dva prsty — posun</li>
+        <li>Kliknutí na podlahu — výběr místnosti</li>
+        <li>V režimu procházky: <b>W A S D</b> + táhnutí</li>
+      </ul>
+      <a class="back" href="/">← Zpět na vikrr.com</a>
+    </div>
+  </aside>
+
+  <div class="view" id="view">
+    <button class="chip sidetoggle" id="sideToggle">☰ Dispozice</button>
+    <div class="labels" id="labels"></div>
+    <div class="mode-note" id="modeNote"></div>
+    <div class="hud">
+      <button class="chip" id="btnWalk">🚶 Procházka</button>
+      <button class="chip" id="btnTop">▦ Půdorys</button>
+      <button class="chip" id="btnReset">⟲ Výchozí pohled</button>
+    </div>
+    <div class="loading" id="loading">Načítám 3D model…</div>
+  </div>
+</div>
+
+<script src="./three.min.js"></script>
+<script>window.THREE||document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');</script>
+<script>
+(function(){
+'use strict';
+if(!window.THREE){document.getElementById('loading').textContent='3D knihovnu se nepodařilo načíst.';return;}
+
+/* ───────────────────────── dispozice ───────────────────────── */
+// Vnitřní obrys 21 × 9 m. Osy: X = délka domu, Z = šířka, Y = výška.
+const H = 3.1;            // světlá výška
+const T_OUT = 0.30;       // obvodová zeď
+const T_IN  = 0.12;       // příčka
+const RIDGE_Z = 4.5, RIDGE_Y = 6.0, EAVE_Y = 3.4, OVERHANG = 0.6;
+
+const ROOMS = [
+  {id:'obyvak',  name:'Obývací pokoj',   x0:0,    x1:7.8,  z0:0,   z1:4.2, c:'#cfe3d6'},
+  {id:'kuchyn',  name:'Kuchyň + jídelna',x0:0,    x1:7.8,  z0:4.2, z1:9,   c:'#dbe7d2'},
+  {id:'chodba',  name:'Chodba',          x0:7.8,  x1:18.6, z0:4.0, z1:5.6, c:'#e3ded2'},
+  {id:'koupelna',name:'Koupelna + WC',   x0:7.8,  x1:11.4, z0:0,   z1:4.0, c:'#d3e0ea'},
+  {id:'pokoj1',  name:'Dětský pokoj 1',  x0:11.4, x1:15.0, z0:0,   z1:4.0, c:'#e9dfd0'},
+  {id:'pokoj2',  name:'Dětský pokoj 2',  x0:15.0, x1:18.6, z0:0,   z1:4.0, c:'#e9dfd0'},
+  {id:'loznice', name:'Ložnice',         x0:7.8,  x1:11.6, z0:5.6, z1:9,   c:'#e2dae8'},
+  {id:'satna',   name:'Šatna',           x0:11.6, x1:13.6, z0:5.6, z1:9,   c:'#e6e0d4'},
+  {id:'technicka',name:'Technická m.',   x0:13.6, x1:15.8, z0:5.6, z1:9,   c:'#dcdcdc'},
+  {id:'zadveri', name:'Zádveří',         x0:15.8, x1:18.6, z0:5.6, z1:9,   c:'#e3ded2'},
+  {id:'garaz',   name:'Garáž / sklad',   x0:18.6, x1:21,   z0:0,   z1:9,   c:'#d6d6d6'}
+];
+ROOMS.forEach(r=>{r.area=(r.x1-r.x0)*(r.z1-r.z0);r.cx=(r.x0+r.x1)/2;r.cz=(r.z0+r.z1)/2;});
+const TOTAL = ROOMS.reduce((s,r)=>s+r.area,0);
+document.getElementById('stArea').textContent = TOTAL.toFixed(0).replace('.',',')+' m²';
+
+/* ───────────────────────── scéna ───────────────────────── */
+const view = document.getElementById('view');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xe7eef2);
+scene.fog = new THREE.Fog(0xdbe8f3, 42, 110);
+
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 500);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+view.appendChild(renderer.domElement);
+
+const sky = new THREE.Mesh(
+  new THREE.SphereGeometry(220, 24, 16),
+  new THREE.MeshBasicMaterial({color:0xdbe8f3, side:THREE.BackSide, fog:false}));
+scene.add(sky);
+
+const hemi = new THREE.HemisphereLight(0xdfeaf3, 0x8e8778, 0.48);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xfff3e2, 0.82);
+sun.position.set(-4, 27, 30);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+const sc = sun.shadow.camera;
+sc.left=-26; sc.right=26; sc.top=26; sc.bottom=-26; sc.near=1; sc.far=90;
+scene.add(sun, sun.target);
+sun.target.position.set(10.5, 0, 4.5);
+const amb = new THREE.AmbientLight(0xffffff, 0.16);
+scene.add(amb);
+
+/* materiály */
+const M = {
+  wall:  new THREE.MeshLambertMaterial({color:0xf2ede4}),
+  wallIn:new THREE.MeshLambertMaterial({color:0xfaf7f1}),
+  glass: new THREE.MeshLambertMaterial({color:0x9fc4d8, transparent:true, opacity:0.28, side:THREE.DoubleSide}),
+  frame: new THREE.MeshLambertMaterial({color:0x3a4440}),
+  wood:  new THREE.MeshLambertMaterial({color:0xc4a077}),
+  woodD: new THREE.MeshLambertMaterial({color:0x8a6a49}),
+  roof:  new THREE.MeshLambertMaterial({color:0x22262a}),
+  soft:  new THREE.MeshLambertMaterial({color:0x6f7d76}),
+  fabric:new THREE.MeshLambertMaterial({color:0x8d9a92}),
+  white: new THREE.MeshLambertMaterial({color:0xfdfdfb}),
+  dark:  new THREE.MeshLambertMaterial({color:0x2b3230}),
+  metal: new THREE.MeshLambertMaterial({color:0xb9bcc0}),
+  grass: new THREE.MeshLambertMaterial({color:0x84a068})
+};
+
+/* skupiny */
+const gShell = new THREE.Group();   // obvodové zdi + okna
+const gInner = new THREE.Group();   // příčky + dveře
+const gFloor = new THREE.Group();   // podlahy místností
+const gRoof  = new THREE.Group();
+const gFurn  = new THREE.Group();
+const gCeil  = new THREE.Group();   // podhled nad noční zónou
+const gLamps = new THREE.Group();
+scene.add(gShell, gInner, gFloor, gRoof, gCeil, gFurn, gLamps);
+
+/* terén */
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(120,120), M.grass);
+ground.rotation.x = -Math.PI/2;
+ground.position.set(10.5,-0.35,4.5);
+ground.receiveShadow = true;
+scene.add(ground);
+const slab = new THREE.Mesh(new THREE.BoxGeometry(21+2*T_OUT+1.6, 0.35, 9+2*T_OUT+1.6), new THREE.MeshLambertMaterial({color:0xcfc9bd}));
+slab.position.set(10.5,-0.175,4.5); slab.receiveShadow=true; scene.add(slab);
+
+/* ── stavitel zdí s otvory ── */
+function wall(ax,az,bx,bz,o){
+  o = o||{};
+  const t = o.t||T_IN, h = o.h||H, mat = o.mat||M.wall;
+  const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz);
+  const g = new THREE.Group();
+  const add=(from,to,y0,y1,m)=>{
+    const w=to-from; if(w<=0.005||y1-y0<=0.005) return;
+    const box=new THREE.Mesh(new THREE.BoxGeometry(w,y1-y0,t), m||mat);
+    box.position.set(from+w/2,(y0+y1)/2,0);
+    box.castShadow=true; box.receiveShadow=true; g.add(box);
+  };
+  const ops=(o.openings||[]).slice().sort((a,b)=>a.from-b.from);
+  let cur=0;
+  ops.forEach(op=>{
+    add(cur,op.from,0,h);
+    if(op.y0>0.005) add(op.from,op.to,0,op.y0);
+    if(op.y1<h-0.005) add(op.from,op.to,op.y1,h);
+    if(op.glass){
+      const w=op.to-op.from, hh=op.y1-op.y0;
+      const pane=new THREE.Mesh(new THREE.PlaneGeometry(w-0.08,hh-0.08), M.glass);
+      pane.position.set(op.from+w/2,(op.y0+op.y1)/2,0);
+      g.add(pane);
+      // rám
+      const fr=0.05;
+      [[op.from+fr/2,(op.y0+op.y1)/2,fr,hh],[op.to-fr/2,(op.y0+op.y1)/2,fr,hh],
+       [op.from+w/2,op.y0+fr/2,w,fr],[op.from+w/2,op.y1-fr/2,w,fr]].forEach(f=>{
+        const b=new THREE.Mesh(new THREE.BoxGeometry(f[2],f[3],t*0.5), M.frame);
+        b.position.set(f[0],f[1],0); g.add(b);
+      });
+    }
+    if(op.door){
+      const w=op.to-op.from;
+      const d=new THREE.Mesh(new THREE.BoxGeometry(w-0.06,op.y1-op.y0-0.04,0.04), op.door===2?M.woodD:M.wood);
+      d.position.set(op.from+w/2,(op.y0+op.y1)/2,0); d.castShadow=true; g.add(d);
+    }
+    cur=op.to;
+  });
+  add(cur,len,0,h);
+  g.position.set(ax,0,az);
+  g.rotation.y = Math.atan2(-dz,dx);
+  return g;
+}
+
+/* ── obvodové zdi ── */
+const WIN = {y0:1.0, y1:2.35, glass:true};
+const w = (from,to)=>({from,to,y0:WIN.y0,y1:WIN.y1,glass:true});
+
+// sever (z = 0) — dlouhý pás oken podle fasády
+gShell.add(wall(0,0,21,0,{t:T_OUT,mat:M.wall,openings:[
+  w(0.6,3.2), w(3.9,6.9), w(8.4,10.6), w(11.9,14.4), w(15.5,18.0)
+]}));
+// východ (x = 21) — garážová vrata + okno
+gShell.add(wall(21,0,21,9,{t:T_OUT,openings:[
+  {from:1.6,to:5.4,y0:0,y1:2.5,door:2}
+]}));
+// jih (z = 9) — okna ložnice, vstupní dveře
+gShell.add(wall(21,9,0,9,{t:T_OUT,openings:[
+  {from:2.6,to:4.6,y0:WIN.y0,y1:WIN.y1,glass:true},   // technická/zádveří pás
+  {from:5.0,to:6.1,y0:0,y1:2.3,door:2},               // vstupní dveře
+  w(9.8,12.4),                                        // ložnice
+  {from:14.2,to:20.4,y0:0.1,y1:2.7,glass:true}        // prosklení jídelny na terasu
+]}));
+// západ (x = 0) — celý prosklený štít
+gShell.add(wall(0,9,0,0,{t:T_OUT,openings:[
+  {from:0.5,to:8.5,y0:0.05,y1:2.95,glass:true}
+]}));
+
+// prosklený trojúhelník ve štítu (nad obvodovou zdí)
+(function gableGlass(){
+  const shp=new THREE.Shape();
+  shp.moveTo(0,H); shp.lineTo(9,H); shp.lineTo(RIDGE_Z,RIDGE_Y); shp.closePath();
+  const g=new THREE.Mesh(new THREE.ShapeGeometry(shp), M.glass);
+  g.rotation.y=-Math.PI/2; g.position.set(-0.02,0,0); gShell.add(g);
+  // příčle
+  for(let i=1;i<6;i++){
+    const z=1.2+i*1.1;
+    const top=H+(RIDGE_Y-H)*(1-Math.abs(z-RIDGE_Z)/RIDGE_Z);
+    const b=new THREE.Mesh(new THREE.BoxGeometry(0.07,top-H,0.07),M.frame);
+    b.position.set(0,H+(top-H)/2,z); gShell.add(b);
+  }
+})();
+
+/* ── příčky ── */
+const D = (from,w2,type)=>({from,to:from+(w2||0.9),y0:0,y1:2.02,door:type||1});
+const PASS = (from,to)=>({from,to,y0:0,y1:2.4});
+
+gInner.add(wall(7.8,0,7.8,9,{openings:[PASS(4.3,5.4)]}));                 // obytná zóna / chodba
+gInner.add(wall(7.8,4.0,18.6,4.0,{openings:[D(1.4),D(5.0),D(8.6)]}));     // sever chodby
+gInner.add(wall(7.8,5.6,18.6,5.6,{openings:[D(1.5),D(4.4,0.8),D(6.5,0.8),D(9.1)]})); // jih chodby
+gInner.add(wall(11.4,0,11.4,4.0,{}));
+gInner.add(wall(15.0,0,15.0,4.0,{}));
+gInner.add(wall(11.6,5.6,11.6,9,{}));
+gInner.add(wall(13.6,5.6,13.6,9,{}));
+gInner.add(wall(15.8,5.6,15.8,9,{}));
+gInner.add(wall(18.6,0,18.6,9,{openings:[D(6.9,1.0,2)]}));                // garáž
+
+/* ── podlahy místností (klikatelné) ── */
+ROOMS.forEach(r=>{
+  const m=new THREE.Mesh(new THREE.BoxGeometry(r.x1-r.x0,0.04,r.z1-r.z0),
+    new THREE.MeshLambertMaterial({color:new THREE.Color(r.c)}));
+  m.position.set(r.cx,0.02,r.cz);
+  m.receiveShadow=true; m.userData.room=r;
+  gFloor.add(m);
+});
+
+/* ── strop nad noční zónou (aby byl otevřený krov jen nad obývacím prostorem) ── */
+(function ceiling(){
+  const c=new THREE.Mesh(new THREE.BoxGeometry(21-7.8,0.12,9), M.wallIn);
+  c.position.set((7.8+21)/2,H+0.06,4.5); c.receiveShadow=true; gCeil.add(c);
+})();
+
+/* ── střecha ── */
+(function roof(){
+  const halfW=Math.hypot(RIDGE_Z+OVERHANG, RIDGE_Y-EAVE_Y);
+  const len=21+2*OVERHANG+0.6;
+  [-1,1].forEach(s=>{
+    const p=new THREE.Mesh(new THREE.BoxGeometry(len,0.22,halfW), M.roof);
+    p.position.set(10.5,(RIDGE_Y+EAVE_Y)/2, RIDGE_Z + s*( (RIDGE_Z+OVERHANG)/2 ));
+    p.rotation.x = s*Math.atan2(RIDGE_Y-EAVE_Y, RIDGE_Z+OVERHANG);
+    p.castShadow=true; gRoof.add(p);
+  });
+  // štítové trojúhelníky
+  [-T_OUT/2-0.02, 21+T_OUT/2+0.02].forEach(gx=>{
+    const shp=new THREE.Shape();
+    shp.moveTo(-OVERHANG,EAVE_Y); shp.lineTo(9+OVERHANG,EAVE_Y); shp.lineTo(RIDGE_Z,RIDGE_Y); shp.closePath();
+    const m=new THREE.Mesh(new THREE.ShapeGeometry(shp), M.wall);
+    m.rotation.y=-Math.PI/2; m.position.set(gx,0,0);
+    m.material.side=THREE.DoubleSide; gRoof.add(m);
+  });
+  // komín
+  const ch=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,2.2,16), M.dark);
+  ch.position.set(6.4,RIDGE_Y+0.6,RIDGE_Z-0.9); ch.castShadow=true; gRoof.add(ch);
+})();
+
+/* ───────────────────────── nábytek ───────────────────────── */
+function box(x,y,z,w2,h2,d2,mat,rot){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w2,h2,d2), mat);
+  m.position.set(x,y+h2/2,z); if(rot) m.rotation.y=rot;
+  m.castShadow=true; m.receiveShadow=true; gFurn.add(m); return m;
+}
+function chair(x,z,rot){
+  box(x,0.42,z,0.46,0.05,0.46,M.woodD,rot);
+  box(x,0,z,0.05,0.42,0.05,M.dark,rot);
+  const b=box(x,0.47,z,0.46,0.45,0.05,M.woodD,rot);
+  b.position.z = z - Math.cos(rot||0)*0.2; b.position.x = x + Math.sin(rot||0)*0.2;
+}
+
+/* obývací pokoj */
+box(1.4,0.0,1.2,2.6,0.72,0.95,M.fabric,0);          // pohovka
+box(1.4,0.72,0.85,2.6,0.5,0.25,M.soft,0);           // opěradlo
+box(3.2,0.0,2.9,1.1,0.36,0.62,M.woodD,0);           // konferenční stolek
+box(6.6,0.0,1.9,0.42,0.5,2.4,M.dark,0);             // TV komoda
+box(6.9,0.55,1.9,0.06,0.72,1.28,M.dark,0);          // TV
+box(5.0,0.0,0.5,0.55,0.9,0.55,M.metal,0);           // krbová kamna
+box(2.6,0.0,3.6,2.2,0.02,1.6,new THREE.MeshLambertMaterial({color:0xb9a98f}),0); // koberec
+
+/* kuchyň + jídelna */
+box(1.9,0.0,7.4,3.2,0.78,0.95,M.woodD,0);           // jídelní stůl
+[[0.8,6.7],[1.9,6.7],[3.0,6.7]].forEach(p=>chair(p[0],p[1],0));
+[[0.8,8.1],[1.9,8.1],[3.0,8.1]].forEach(p=>chair(p[0],p[1],Math.PI));
+box(6.5,0.0,7.2,0.65,0.9,3.2,M.white,0);            // kuchyňská linka u stěny
+box(6.5,0.9,7.2,0.68,0.06,3.24,M.dark,0);           // deska
+box(6.5,1.45,7.2,0.38,1.0,2.4,M.wallIn,0);          // horní skříňky
+box(4.7,0.0,7.0,1.9,0.9,0.85,M.white,0);            // ostrůvek
+box(4.7,0.9,7.0,1.98,0.06,0.92,M.dark,0);
+
+/* ložnice */
+box(9.6,0.0,7.4,2.0,0.45,2.0,M.woodD,0);            // postel
+box(9.6,0.45,7.4,1.9,0.24,1.9,M.white,0);           // matrace
+box(9.6,0.69,6.6,1.7,0.14,0.45,M.fabric,0);         // polštáře
+box(8.3,0.0,6.3,0.45,0.5,0.4,M.wood,0);
+box(10.9,0.0,6.3,0.45,0.5,0.4,M.wood,0);
+box(11.2,0.0,8.4,0.6,2.2,1.0,M.wallIn,0);
+
+/* šatna */
+box(12.0,0.0,7.3,0.6,2.2,2.9,M.wallIn,0);
+box(13.2,0.0,7.3,0.6,2.2,2.9,M.wallIn,0);
+
+/* dětské pokoje */
+[[12.2],[15.8]].forEach(p=>{
+  const x=p[0];
+  box(x+0.5,0.0,1.2,1.9,0.4,0.95,M.woodD,Math.PI/2);
+  box(x+0.5,0.4,1.2,1.85,0.2,0.9,M.white,Math.PI/2);
+  box(x+2.3,0.0,0.6,1.3,0.75,0.6,M.wood,0);         // stůl
+  chair(x+2.3,1.3,Math.PI);
+  box(x+2.6,0.0,3.4,0.55,2.0,1.0,M.wallIn,0);       // skříň
+});
+
+/* koupelna */
+box(8.4,0.0,0.9,1.7,0.55,0.75,M.white,0);           // vana
+box(10.6,0.0,0.6,0.9,0.05,0.9,M.metal,0);           // sprchová vanička
+box(10.6,0.05,0.6,0.9,2.0,0.9,M.glass,0);           // sprchový kout
+box(8.6,0.85,3.5,1.4,0.1,0.5,M.white,0);            // umyvadlová deska
+box(8.6,0.0,3.5,1.4,0.85,0.5,M.woodD,0);
+box(10.8,0.0,3.5,0.4,0.42,0.6,M.white,0);           // wc
+
+/* technická */
+box(14.3,0.6,8.6,0.6,1.4,0.35,M.metal,0);
+box(15.2,0.0,8.5,0.7,1.6,0.6,M.white,0);
+
+/* zádveří */
+box(16.3,0.0,8.5,1.2,2.1,0.55,M.wallIn,0);
+box(18.0,0.0,7.0,0.5,0.45,1.2,M.wood,0);
+
+/* garáž */
+box(19.8,0.0,2.6,1.9,1.45,4.4,new THREE.MeshLambertMaterial({color:0xc9d2d8}),0); // auto
+box(19.8,0.0,7.3,0.6,2.1,2.6,M.metal,0);            // regály
+
+/* stropní svítidla */
+[[3.9,2.1],[3.9,7.0],[13.2,4.8],[9.6,7.3],[12.2,2.0],[16.8,2.0]].forEach(p=>{
+  const l=new THREE.PointLight(0xffe6bd, 0, 8, 2);
+  l.position.set(p[0], 2.6, p[1]);
+  gLamps.add(l);
+  const b=new THREE.Mesh(new THREE.SphereGeometry(0.09,10,8), new THREE.MeshBasicMaterial({color:0xfff3d8}));
+  b.position.copy(l.position); b.visible=false; l.userData.bulb=b; gLamps.add(b);
+});
+
+/* ───────────────────────── kamera & ovládání ───────────────────────── */
+const TARGET0 = new THREE.Vector3(10.5, 1.2, 4.5);
+const orbit = {target:TARGET0.clone(), r:31, theta:2.22, phi:0.90};
+let mode='orbit';                       // 'orbit' | 'walk'
+const walk = {pos:new THREE.Vector3(3.5,1.65,4.5), yaw:0.0, pitch:-0.05};
+const keys = Object.create(null);
+
+function applyCamera(){
+  if(mode==='orbit'){
+    const {target,r,theta,phi}=orbit;
+    camera.position.set(
+      target.x + r*Math.sin(phi)*Math.cos(theta),
+      target.y + r*Math.cos(phi),
+      target.z + r*Math.sin(phi)*Math.sin(theta)
+    );
+    camera.lookAt(target);
+  }else{
+    camera.position.copy(walk.pos);
+    const dir=new THREE.Vector3(
+      Math.cos(walk.pitch)*Math.sin(walk.yaw), Math.sin(walk.pitch), Math.cos(walk.pitch)*Math.cos(walk.yaw));
+    camera.lookAt(walk.pos.clone().add(dir));
+  }
+}
+
+/* myš / dotyk */
+const el=renderer.domElement;
+let drag=null;
+el.addEventListener('pointerdown',e=>{
+  el.setPointerCapture(e.pointerId);
+  drag={x:e.clientX,y:e.clientY,pan:(e.button===2||e.shiftKey),moved:0};
+});
+el.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  const dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+  drag.x=e.clientX; drag.y=e.clientY; drag.moved+=Math.abs(dx)+Math.abs(dy);
+  if(mode==='walk'){
+    walk.yaw -= dx*0.005;
+    walk.pitch = Math.max(-1.2, Math.min(1.2, walk.pitch - dy*0.004));
+  }else if(drag.pan){
+    const s=orbit.r*0.0016;
+    const right=new THREE.Vector3(-Math.sin(orbit.theta),0,Math.cos(orbit.theta));
+    const fwd=new THREE.Vector3(-Math.cos(orbit.theta),0,-Math.sin(orbit.theta));
+    orbit.target.addScaledVector(right,-dx*s).addScaledVector(fwd,-dy*s);
+  }else{
+    orbit.theta += dx*0.006;
+    orbit.phi = Math.max(0.12, Math.min(1.52, orbit.phi + dy*0.005));
+  }
+});
+el.addEventListener('pointerup',e=>{
+  if(drag && drag.moved<6 && mode==='orbit') pick(e);
+  drag=null;
+});
+el.addEventListener('contextmenu',e=>e.preventDefault());
+el.addEventListener('wheel',e=>{
+  e.preventDefault();
+  if(mode==='walk'){
+    const d=new THREE.Vector3(Math.sin(walk.yaw),0,Math.cos(walk.yaw));
+    walk.pos.addScaledVector(d, -e.deltaY*0.004);
+  }else{
+    orbit.r=Math.max(4,Math.min(90, orbit.r*(1+e.deltaY*0.0012)));
+  }
+},{passive:false});
+
+/* pinch zoom */
+const touches=new Map();
+el.addEventListener('pointerdown',e=>touches.set(e.pointerId,e));
+el.addEventListener('pointerup',e=>touches.delete(e.pointerId));
+el.addEventListener('pointercancel',e=>touches.delete(e.pointerId));
+let lastPinch=0;
+el.addEventListener('pointermove',e=>{
+  if(!touches.has(e.pointerId)) return;
+  touches.set(e.pointerId,e);
+  if(touches.size===2){
+    drag=null;
+    const [a,b]=[...touches.values()];
+    const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+    if(lastPinch) orbit.r=Math.max(4,Math.min(90, orbit.r*(lastPinch/d)));
+    lastPinch=d;
+  }else lastPinch=0;
+});
+
+window.addEventListener('keydown',e=>{
+  keys[e.key.toLowerCase()]=true;
+  if(e.key==='Escape' && mode==='walk') setMode('orbit');
+});
+window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+
+/* výběr místnosti */
+const ray=new THREE.Raycaster(), ndc=new THREE.Vector2();
+function pick(e){
+  const r=el.getBoundingClientRect();
+  ndc.x=((e.clientX-r.left)/r.width)*2-1;
+  ndc.y=-((e.clientY-r.top)/r.height)*2+1;
+  ray.setFromCamera(ndc,camera);
+  const hits=ray.intersectObjects(gFloor.children,false);
+  if(hits.length) selectRoom(hits[0].object.userData.room.id);
+}
+
+/* ───────────────────────── UI ───────────────────────── */
+let selected=null;
+const labels=document.getElementById('labels');
+const labelEls={};
+const listEl=document.getElementById('roomList');
+
+ROOMS.forEach(r=>{
+  const b=document.createElement('button');
+  b.className='room'; b.dataset.id=r.id;
+  b.innerHTML='<i style="background:'+r.c+'"></i><span>'+r.name+'</span><em>'+r.area.toFixed(1).replace('.',',')+' m²</em>';
+  b.addEventListener('click',()=>selectRoom(r.id,true));
+  listEl.appendChild(b);
+
+  const l=document.createElement('div');
+  l.className='lbl';
+  l.innerHTML='<b>'+r.name+'</b><em>'+r.area.toFixed(1).replace('.',',')+' m²</em>';
+  labels.appendChild(l); labelEls[r.id]=l;
+});
+
+function selectRoom(id, fly){
+  selected = (selected===id) ? null : id;
+  ROOMS.forEach(r=>{
+    const on = r.id===selected;
+    listEl.querySelector('[data-id="'+r.id+'"]').classList.toggle('active',on);
+    labelEls[r.id].classList.toggle('on',on);
+    const mesh=gFloor.children.find(m=>m.userData.room.id===r.id);
+    mesh.material.emissive = new THREE.Color(on?0x1d7a58:0x000000);
+    mesh.material.emissiveIntensity = on?0.35:0;
+  });
+  const r=ROOMS.find(x=>x.id===selected);
+  if(r && fly!==false){
+    if(mode==='walk'){ walk.pos.set(r.cx,1.65,r.cz); }
+    else{ flyTo(new THREE.Vector3(r.cx,1.2,r.cz), Math.max(11, Math.max(r.x1-r.x0,r.z1-r.z0)*2.6)); }
+  }
+}
+
+let fly=null;
+function flyTo(target,r){ fly={t0:performance.now(), from:orbit.target.clone(), to:target, r0:orbit.r, r1:r}; }
+
+function note(txt){
+  const n=document.getElementById('modeNote');
+  n.textContent=txt; n.classList.add('show');
+  clearTimeout(note._t); note._t=setTimeout(()=>n.classList.remove('show'),2600);
+}
+
+/* přepínače */
+function toggle(id, fn, init){
+  const b=document.getElementById(id);
+  let on = b.getAttribute('aria-pressed')==='true';
+  fn(on);
+  b.addEventListener('click',()=>{ on=!on; b.setAttribute('aria-pressed',String(on)); fn(on); });
+}
+toggle('tgRoof', on=>{ gRoof.visible=on; gCeil.visible=on; });
+toggle('tgWalls',on=>{ gInner.visible=on; });
+toggle('tgFurn', on=>{ gFurn.visible=on; });
+toggle('tgLbl',  on=>{ labels.style.display=on?'':'none'; });
+toggle('tgNight',on=>{
+  if(on){
+    scene.background.set(0x1b2430); scene.fog.color.set(0x243040); sky.material.color.set(0x243040);
+    hemi.intensity=0.14; sun.intensity=0.08; amb.intensity=0.07;
+    M.grass.color.set(0x33402f);
+    gLamps.children.forEach(o=>{ if(o.isPointLight){o.intensity=1.5; o.userData.bulb.visible=true;} });
+  }else{
+    scene.background.set(0xe7eef2); scene.fog.color.set(0xdbe8f3); sky.material.color.set(0xdbe8f3);
+    hemi.intensity=0.48; sun.intensity=0.82; amb.intensity=0.16;
+    M.grass.color.set(0x84a068);
+    gLamps.children.forEach(o=>{ if(o.isPointLight){o.intensity=0; o.userData.bulb.visible=false;} });
+  }
+});
+
+function setMode(m){
+  mode=m;
+  const bw=document.getElementById('btnWalk');
+  bw.classList.toggle('on', m==='walk');
+  if(m==='walk'){
+    walk.pos.set(3.5,1.65,4.5); walk.yaw=Math.PI/2*3; walk.pitch=-0.03;
+    note('Procházka: W A S D pro pohyb, táhnutí myší rozhlížení, Esc zpět');
+    const tr=document.getElementById('tgRoof');
+    tr.setAttribute('aria-pressed','true');
+    gRoof.visible=true; gCeil.visible=true;
+  }else{
+    note('Pohled zvenku');
+  }
+}
+document.getElementById('btnWalk').addEventListener('click',()=>setMode(mode==='walk'?'orbit':'walk'));
+document.getElementById('btnTop').addEventListener('click',()=>{
+  mode='orbit'; document.getElementById('btnWalk').classList.remove('on');
+  orbit.phi=0.16; orbit.theta=-Math.PI/2; orbit.r=30; orbit.target.copy(TARGET0);
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  mode='orbit'; document.getElementById('btnWalk').classList.remove('on');
+  orbit.r=31; orbit.theta=2.22; orbit.phi=0.90; orbit.target.copy(TARGET0);
+});
+document.getElementById('sideToggle').addEventListener('click',()=>{
+  document.getElementById('side').classList.toggle('open');
+});
+
+/* ───────────────────────── smyčka ───────────────────────── */
+function resize(){
+  const w2=view.clientWidth, h2=view.clientHeight;
+  renderer.setSize(w2,h2,false);
+  camera.aspect=w2/h2; camera.updateProjectionMatrix();
+}
+window.addEventListener('resize',resize);
+resize();
+
+const tmp=new THREE.Vector3();
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+
+  if(fly){
+    const k=Math.min(1,(now-fly.t0)/620), e=1-Math.pow(1-k,3);
+    orbit.target.lerpVectors(fly.from,fly.to,e);
+    orbit.r=fly.r0+(fly.r1-fly.r0)*e;
+    if(k>=1) fly=null;
+  }
+
+  if(mode==='walk'){
+    const sp=(keys['shift']?5.2:2.7)*dt;
+    const f=new THREE.Vector3(Math.sin(walk.yaw),0,Math.cos(walk.yaw));
+    const r=new THREE.Vector3(Math.cos(walk.yaw),0,-Math.sin(walk.yaw));
+    if(keys['w']||keys['arrowup'])    walk.pos.addScaledVector(f,sp);
+    if(keys['s']||keys['arrowdown'])  walk.pos.addScaledVector(f,-sp);
+    if(keys['a']||keys['arrowleft'])  walk.pos.addScaledVector(r,-sp);
+    if(keys['d']||keys['arrowright']) walk.pos.addScaledVector(r,sp);
+    walk.pos.x=Math.max(-6,Math.min(27,walk.pos.x));
+    walk.pos.z=Math.max(-6,Math.min(15,walk.pos.z));
+    walk.pos.y=1.65;
+  }
+
+  applyCamera();
+  renderer.render(scene,camera);
+
+  // popisky
+  if(labels.style.display!=='none'){
+    const w2=view.clientWidth, h2=view.clientHeight;
+    const placed=[];
+    ROOMS.map(r=>{
+      tmp.set(r.cx,1.35,r.cz);
+      const d=camera.position.distanceTo(tmp);
+      tmp.project(camera);
+      return {r,d,x:(tmp.x*0.5+0.5)*w2, y:(-tmp.y*0.5+0.5)*h2, behind:tmp.z>1};
+    }).sort((a,b)=>{
+      if(a.r.id===selected) return -1;
+      if(b.r.id===selected) return 1;
+      return b.r.area-a.r.area;
+    }).forEach(o=>{
+      const l=labelEls[o.r.id];
+      if(o.behind || o.x<0 || o.x>w2 || o.y<0 || o.y>h2){ l.style.display='none'; return; }
+      const w3=l.offsetWidth||120, h3=l.offsetHeight||24;
+      const hit=placed.some(q=>Math.abs(q.x-o.x)<(q.w+w3)/2+6 && Math.abs(q.y-o.y)<(q.h+h3)/2+4);
+      if(hit && o.r.id!==selected){ l.style.display='none'; return; }
+      placed.push({x:o.x,y:o.y,w:w3,h:h3});
+      l.style.display='';
+      l.style.left=o.x+'px';
+      l.style.top=o.y+'px';
+      l.style.opacity = o.d>70?0.3:1;
+    });
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+setTimeout(()=>document.getElementById('loading').classList.add('gone'),260);
+})();
+</script>
+</body>
+</html>

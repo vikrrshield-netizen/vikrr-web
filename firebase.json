@@ -8,6 +8,7 @@
         { "source": "/asset-shield/demo/**", "destination": "/asset-shield/demo/index.html" },
         { "source": "/asset-shield/**", "destination": "/asset-shield/index.html" },
         { "source": "/takt/**", "destination": "/takt/index.html" },
+        { "source": "/dum/**", "destination": "/dum/index.html" },
         { "source": "**", "destination": "/index.html" }
       ]
     }
