@@ -459,8 +459,8 @@ ROOMS.forEach(r=>{
     p.castShadow=true; gRoof.add(p);
   });
   // komín vychází z kachlových kamen v obytném prostoru (výkres: x 9,4 · z 5,4)
-  const ch=new THREE.Mesh(new THREE.BoxGeometry(0.42,2.6,0.42),M.dark);
-  ch.position.set(9.40,RIDGE+0.15,5.40); ch.castShadow=true; gRoof.add(ch);
+  const ch=new THREE.Mesh(new THREE.BoxGeometry(0.42,2.2,0.42),M.dark);
+  ch.position.set(10.10,6.10,5.85); ch.castShadow=true; gRoof.add(ch);
 })();
 
 /* ── venkovní části: terasa, WC, parkovací stání, závětří ── */
@@ -524,29 +524,54 @@ function chair(x,z,rot){
 
 /* ── vybavení podle výkresu 1.NP (pozice odečtené z popisků a kót) ── */
 
-/* 111 Obytný prostor: kuchyňská linka u severní stěny, ostrůvek, jídelna,
-   obývací část a kachlový krb do výšky hřebene (výkres: x 9,4 · z 5,4) */
-box(6.85,0,7.68,4.70,0.90,0.65,M.white,0);          // linka 4750 mm od x=4500
-box(6.85,0.90,7.68,4.74,0.06,0.68,M.dark,0);
-box(6.85,1.45,7.86,4.20,1.00,0.36,M.wallIn,0);      // horní skříňky
-box(5.35,0.92,7.66,0.80,0.03,0.45,M.metal,0);       // dřez
-box(7.90,0.93,7.66,0.60,0.02,0.50,M.dark,0);        // varná deska
-box(6.60,0,6.10,2.40,0.90,1.00,M.white,0);          // ostrůvek 2400 mm
-box(6.60,0.90,6.10,2.46,0.06,1.06,M.dark,0);
-(function table(){                                   // jídelní stůl
-  box(6.10,0.72,3.40,1.00,0.06,2.40,M.woodD,0);
-  [[5.65,2.30],[6.55,2.30],[5.65,4.50],[6.55,4.50]].forEach(l=>
+/* 111 Obytný prostor — obrysy odměřené z výkresu 1.NP:
+   linka 4500–8375 · ostrůvek 5455–7931 × 5363–6347 · stůl 5420–6340 × 1650–4160
+   kachlová kamna 9700–10500 × 5500–6200 (u příčky, ne uprostřed prostoru) */
+box(6.44,0,7.66,3.88,0.90,0.67,M.white,0);          // kuchyňská linka u severní stěny
+box(6.44,0.90,7.66,3.92,0.06,0.70,M.dark,0);
+box(6.44,1.45,7.86,3.60,1.00,0.36,M.wallIn,0);      // horní skříňky
+box(4.72,0,7.35,0.44,0.90,1.30,M.white,0);          // roh linky u západní stěny
+box(4.72,0.90,7.35,0.46,0.06,1.32,M.dark,0);
+box(7.63,0.92,7.62,0.72,0.03,0.44,M.metal,0);       // dřez
+box(6.69,0,5.86,2.48,0.90,0.98,M.white,0);          // ostrůvek 2480 × 980
+box(6.69,0.90,5.86,2.54,0.06,1.04,M.dark,0);
+box(7.45,0.93,6.07,0.68,0.02,0.36,M.dark,0);        // varná deska na ostrůvku
+
+(function jidelna(){                                 // stůl 920 × 2510, 5 + 5 židlí
+  box(5.88,0.72,2.90,0.92,0.06,2.51,M.woodD,0);
+  [[5.50,1.80],[6.26,1.80],[5.50,4.00],[6.26,4.00]].forEach(l=>
     box(l[0],0,l[1],0.08,0.72,0.08,M.woodD,0));
+  [4.03,3.52,3.01,2.47,1.97].forEach(z=>{
+    chair(5.22,z, Math.PI/2);
+    chair(6.54,z,-Math.PI/2);
+  });
 })();
-[[5.30,2.55],[5.30,3.40],[5.30,4.25]].forEach(c=>chair(c[0],c[1],Math.PI/2));
-[[6.90,2.55],[6.90,3.40],[6.90,4.25]].forEach(c=>chair(c[0],c[1],-Math.PI/2));
-box(9.40,0,5.40,0.85,RIDGE-0.15,0.72,M.stone,0);    // kachlový krb do výšky hřebene
-box(8.95,0,2.30,0.95,0.70,2.20,M.fabric,0);         // sedačka u krbu
-box(9.35,0.70,2.30,0.24,0.46,2.20,M.soft,0);
-box(7.60,0,2.30,0.60,0.36,1.10,M.woodD,0);          // konferenční stolek
+
+/* obývací část — koberec 7050–9010 × 2220–3740, sedačka, dva kulaté stolky */
+box(8.03,0,2.98,1.96,0.02,1.52,new THREE.MeshLambertMaterial({color:0xb0a288}),0);
+box(8.03,0,3.52,1.90,0.42,0.88,M.fabric,0);         // sedačka zády ke kuchyni
+box(8.03,0.42,3.80,1.90,0.44,0.32,M.soft,0);        // opěradlo
+box(7.16,0.42,3.52,0.16,0.24,0.88,M.soft,0);        // područky
+box(8.90,0.42,3.52,0.16,0.24,0.88,M.soft,0);
+[[8.06,3.01],[8.44,2.91]].forEach(c=>{              // kulaté konferenční stolky
+  const t=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.28,0.06,20),M.woodD);
+  t.position.set(c[0],0.40,c[1]); t.castShadow=true; gFurn.add(t);
+  const l=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.40,10),M.dark);
+  l.position.set(c[0],0.20,c[1]); gFurn.add(l);
+});
+box(8.77,0,1.87,0.48,0.40,0.70,M.fabric,0);         // křeslo
+box(8.77,0.40,1.87,0.48,0.42,0.20,M.soft,0);
+box(7.90,0,1.49,0.70,0.38,0.58,M.woodD,0);          // odkládací stolek
+
+/* kachlová kamna do výšky hřebene — přisazená k příčce (výkres: 9700–10500) */
+box(10.10,0,5.85,0.80,RIDGE-0.15,0.70,M.stone,0);
+box(10.10,0.35,5.50,0.46,0.52,0.03,M.dark,0);       // prosklená dvířka
+
+/* televize na příčce naproti sedačce */
+box(10.42,0,3.30,0.16,0.42,1.60,M.woodD,0);         // komoda pod TV
+box(10.44,0.75,3.30,0.05,0.68,1.20,M.dark,0);       // TV
+
 box(7.18,0,0.72,1.80,0.45,0.42,M.woodD,0);          // parapetní sezení (výkres: x 7175)
-box(5.10,0,1.20,0.42,0.50,1.70,M.dark,0);           // TV komoda
-box(5.06,0.55,1.20,0.05,0.68,1.20,M.dark,0);
 
 /* 110 Spíž */
 box(9.85,0,7.10,0.50,2.10,1.50,M.wallIn,0);
@@ -709,7 +734,7 @@ const TARGET0=new THREE.Vector3(10.75,1.2,WZ(4.25));
 const orbit={target:TARGET0.clone(),r:32,theta:2.05,phi:0.92};
 let mode='orbit';
 const EYE=1.66, BODY=0.28;            // výška očí a poloměr těla
-const walk={pos:new THREE.Vector3(8.60,EYE,WZ(4.30)),yaw:-Math.PI/2,pitch:-0.02,
+const walk={pos:new THREE.Vector3(10.05,EYE,WZ(4.85)),yaw:-Math.PI/2,pitch:-0.02,
             vel:new THREE.Vector3(),bob:0,floor:0};
 const keys=Object.create(null);
 
@@ -953,7 +978,7 @@ function setMode(m){
   floorColors(m==='walk');
   if(m!=='walk'&&document.pointerLockElement===el) document.exitPointerLock();
   if(m==='walk'){
-    walk.pos.set(8.60,((level==='s')?FLOOR_S:0)+EYE,WZ(4.30));
+    walk.pos.set(10.05,((level==='s')?FLOOR_S:0)+EYE,WZ(4.85));
     walk.yaw=-Math.PI/2; walk.pitch=-0.02; walk.vel.set(0,0,0);
     note('W A S D chůze · Shift běh · klik zamkne myš pro rozhlížení · Esc zpět');
     document.getElementById('tgRoof').setAttribute('aria-pressed','true');
