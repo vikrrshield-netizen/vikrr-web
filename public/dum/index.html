@@ -240,12 +240,21 @@ const sky=new THREE.Mesh(new THREE.SphereGeometry(200,24,16),
   new THREE.MeshBasicMaterial({color:0xdbe8f3,side:THREE.BackSide,fog:false}));
 scene.add(sky);
 
+/* Osa Z výkresu roste na papíře nahoru, ale při pohledu shora do scény
+   míří dolů — bez tohoto překlopení by byl celý dům zrcadlově obrácený.
+   WORLD drží model i slunce; kamera a obloha zůstávají mimo něj. */
+const DEPTH=8.5;
+const WORLD=new THREE.Group();
+WORLD.scale.z=-1; WORLD.position.z=DEPTH;
+scene.add(WORLD);
+const WZ=v=>DEPTH-v;   // souřadnice modelu -> světová souřadnice
+
 const hemi=new THREE.HemisphereLight(0xdfeaf3,0x8e8778,0.48); scene.add(hemi);
 const sun=new THREE.DirectionalLight(0xfff3e2,0.86);
 sun.position.set(4,26,-26);          // slunce od jihu (z=0 je jih)
 sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
 const sc=sun.shadow.camera; sc.left=-26;sc.right=26;sc.top=26;sc.bottom=-26;sc.near=1;sc.far=95;
-scene.add(sun,sun.target); sun.target.position.set(10.75,0,4.25);
+WORLD.add(sun,sun.target); sun.target.position.set(10.75,0,4.25);
 const amb=new THREE.AmbientLight(0xffffff,0.16); scene.add(amb);
 const inLight=new THREE.HemisphereLight(0xfff4e6,0xb8ad9c,0.0); // doplňkové světlo interiéru
 inLight.position.set(10.75,2.6,4.25); scene.add(inLight);
@@ -275,14 +284,14 @@ const gShell=new THREE.Group(), gInner=new THREE.Group(), gFloor=new THREE.Group
       gOut=new THREE.Group(), gLamps=new THREE.Group();
 const gBase=new THREE.Group(), gBaseFloor=new THREE.Group(), gBaseFurn=new THREE.Group(),
       gBaseCeil=new THREE.Group();
-scene.add(gShell,gInner,gFloor,gRoof,gCeil,gFurn,gOut,gLamps,gBase,gBaseFloor,gBaseFurn,gBaseCeil);
+WORLD.add(gShell,gInner,gFloor,gRoof,gCeil,gFurn,gOut,gLamps,gBase,gBaseFloor,gBaseFurn,gBaseCeil);
 
 /* terén a deska */
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(120,120),M.grass);
 ground.rotation.x=-Math.PI/2; ground.position.set(10.75,-0.30,6); ground.receiveShadow=true;
-scene.add(ground);
+WORLD.add(ground);
 const slab=new THREE.Mesh(new THREE.BoxGeometry(23.5,0.30,10.5),M.stone);
-slab.position.set(10.75,-0.15,4.25); slab.receiveShadow=true; scene.add(slab);
+slab.position.set(10.75,-0.15,4.25); slab.receiveShadow=true; WORLD.add(slab);
 
 /* ── stavitel stěn s otvory ──────────────────────────────────── */
 function wall(ax,az,bx,bz,o){
@@ -642,11 +651,17 @@ box(2.00,0,4.20,1.00,0.75,2.60,M.woodD,0,gOut);
   });
 })();
 
+/* záporné měřítko WORLD obrací vinutí trojúhelníků — materiály musí být oboustranné */
+WORLD.traverse(o=>{
+  if(!o.material) return;
+  (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{m.side=THREE.DoubleSide;});
+});
+
 /* ═══ kamera a ovládání ═══ */
-const TARGET0=new THREE.Vector3(10.75,1.2,4.25);
-const orbit={target:TARGET0.clone(),r:32,theta:-2.05,phi:0.92};
+const TARGET0=new THREE.Vector3(10.75,1.2,WZ(4.25));
+const orbit={target:TARGET0.clone(),r:32,theta:2.05,phi:0.92};
 let mode='orbit';
-const walk={pos:new THREE.Vector3(10.0,1.62,4.60),yaw:-Math.PI/2,pitch:-0.03};
+const walk={pos:new THREE.Vector3(10.0,1.62,WZ(4.60)),yaw:Math.PI/2,pitch:-0.03};
 const keys=Object.create(null);
 
 function applyCamera(){
@@ -764,8 +779,8 @@ function selectRoom(id,fly){
   const r=ALL.find(x=>x.id===selected);
   if(r&&fly!==false){
     if(r.lvl!==level&&level!=='both') setLevel(r.lvl);
-    if(mode==='walk') walk.pos.set(r.cx,r.y+1.62,r.cz);
-    else flyTo(new THREE.Vector3(r.cx,r.y+1.2,r.cz),Math.max(9,Math.max(r.x1-r.x0,r.z1-r.z0)*2.7));
+    if(mode==='walk') walk.pos.set(r.cx,r.y+1.62,WZ(r.cz));
+    else flyTo(new THREE.Vector3(r.cx,r.y+1.2,WZ(r.cz)),Math.max(9,Math.max(r.x1-r.x0,r.z1-r.z0)*2.7));
   }
 }
 
@@ -829,7 +844,7 @@ function setLevel(lv){
     lv==='np'?'Užitná plocha 134,56 m² · 15 místností':
     lv==='s' ?'Užitná plocha 80,87 m² · 6 místností · podlaha −3,25 m':
               'Celkem 215,43 m² užitné plochy ve dvou podlažích';
-  if(lv==='s'&&mode!=='walk'){ orbit.target.set(15.25,FLOOR_S+1.2,4.25); }
+  if(lv==='s'&&mode!=='walk'){ orbit.target.set(15.25,FLOOR_S+1.2,WZ(4.25)); }
   else if(lv==='np'&&mode!=='walk'){ orbit.target.copy(TARGET0); }
   if(mode==='walk') walk.pos.y=(lv==='s'?FLOOR_S:0)+1.62;
   interiorLight();
@@ -841,7 +856,7 @@ function setMode(m){
   mode=m;
   document.getElementById('btnWalk').classList.toggle('on',m==='walk');
   if(m==='walk'){
-    walk.pos.set(10.0,1.62,4.60); walk.yaw=-Math.PI/2; walk.pitch=-0.03;
+    walk.pos.set(10.0,1.62,WZ(4.60)); walk.yaw=Math.PI/2; walk.pitch=-0.03;
     note('Procházka: W A S D pohyb · Shift běh · táhnutí myší rozhlížení · Esc zpět');
     document.getElementById('tgRoof').setAttribute('aria-pressed','true');
     gRoof.visible=true; gCeil.visible=true; interiorLight();
@@ -850,11 +865,11 @@ function setMode(m){
 document.getElementById('btnWalk').addEventListener('click',()=>setMode(mode==='walk'?'orbit':'walk'));
 document.getElementById('btnTop').addEventListener('click',()=>{
   mode='orbit'; document.getElementById('btnWalk').classList.remove('on');
-  orbit.phi=0.15; orbit.theta=-Math.PI/2; orbit.r=30; orbit.target.copy(TARGET0);
+  orbit.phi=0.15; orbit.theta=Math.PI/2; orbit.r=30; orbit.target.copy(TARGET0);
 });
 document.getElementById('btnReset').addEventListener('click',()=>{
   mode='orbit'; document.getElementById('btnWalk').classList.remove('on');
-  orbit.r=32; orbit.theta=-2.05; orbit.phi=0.92; orbit.target.copy(TARGET0);
+  orbit.r=32; orbit.theta=2.05; orbit.phi=0.92; orbit.target.copy(TARGET0);
 });
 document.getElementById('sideToggle').addEventListener('click',()=>document.getElementById('side').classList.toggle('open'));
 
@@ -891,14 +906,15 @@ function loop(now){
   applyCamera();
   renderer.render(scene,camera);
 
-  // severka: sever = +Z
+  // severka: dům je vůči severu natočený o 58° (růžice na výkresu 1.NP)
+  const NORTH_DEG=58;
   const dir=Math.atan2(camera.position.x-orbit.target.x, camera.position.z-orbit.target.z);
-  needle.setAttribute('transform','rotate('+(dir*180/Math.PI)+' 50 50)');
+  needle.setAttribute('transform','rotate('+(dir*180/Math.PI+NORTH_DEG)+' 50 50)');
 
   if(labels.style.display!=='none'){
     const w=view.clientWidth,h=view.clientHeight,placed=[];
     ALL.filter(r=>(level==='both'||r.lvl===level)&&(!r.out||gOut.visible)).map(r=>{
-      tmp.set(r.cx,r.y+1.30,r.cz);
+      tmp.set(r.cx,r.y+1.30,WZ(r.cz));
       const d=camera.position.distanceTo(tmp);
       tmp.project(camera);
       return {r,d,x:(tmp.x*0.5+0.5)*w,y:(-tmp.y*0.5+0.5)*h,behind:tmp.z>1};
