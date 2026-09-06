@@ -54,6 +54,11 @@ a{color:inherit;text-decoration:none}
 .room em{font-style:normal;color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums}
 .room.out span{color:var(--soft)}
 
+.fovrow{display:flex;align-items:center;justify-content:space-between;margin-top:11px;font-size:.85rem;font-weight:650;color:var(--soft)}
+.fovrow b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.range{width:100%;margin-top:8px;accent-color:var(--green)}
+.fovnote{margin-top:7px;color:var(--muted);font-size:.75rem}
+.fovnote+.tg{margin-top:10px}
 .levels{margin-top:11px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .lv{border:1px solid var(--line);border-radius:11px;background:#fff;padding:9px 4px;font-weight:800;font-size:.84rem;cursor:pointer;font-family:inherit;color:var(--soft);transition:background .15s,color .15s,border-color .15s}
 .lv:hover{background:#faf7f0}
@@ -133,6 +138,14 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
         <button class="tg" id="tgLbl" aria-pressed="true">Popisky <span class="sw"></span></button>
         <button class="tg" id="tgNight" aria-pressed="false">Večerní světlo <span class="sw"></span></button>
       </div>
+    </div>
+
+    <div class="group">
+      <h2>Procházka</h2>
+      <label class="fovrow" for="fov">Zorné pole <b id="fovVal">55°</b></label>
+      <input class="range" id="fov" type="range" min="40" max="80" step="1" value="55">
+      <p class="fovnote">Nižší hodnota působí přirozeněji jako pohled okem, vyšší zabere víc do stran, ale prostor opticky zmenšuje.</p>
+      <button class="tg" id="tgFig" aria-pressed="true">Postava pro měřítko <span class="sw"></span></button>
     </div>
 
     <div class="group">
@@ -729,6 +742,23 @@ WORLD.traverse(o=>{
   (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{m.side=THREE.DoubleSide;});
 });
 
+/* postava 175 cm — měřítko prostoru; v pohledu zvenku stojí tam,
+   kde se chodec naposledy nacházel */
+const FIG=new THREE.Group();
+(function figure(){
+  const m=new THREE.MeshLambertMaterial({color:0x46524c});
+  const add=(y,w,h,d)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+    b.position.y=y+h/2; b.castShadow=true; FIG.add(b);};
+  add(0.00,0.34,0.86,0.20);      // nohy
+  add(0.86,0.44,0.62,0.24);      // trup
+  add(1.48,0.19,0.24,0.19);      // hlava
+  const arm=(x)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(0.09,0.58,0.13),m);
+    b.position.set(x,1.18,0); b.castShadow=true; FIG.add(b);};
+  arm(-0.26); arm(0.26);
+})();
+FIG.position.set(10.05,0,4.85);
+WORLD.add(FIG);
+
 /* ═══ kamera a ovládání ═══ */
 const TARGET0=new THREE.Vector3(10.75,1.2,WZ(4.25));
 const orbit={target:TARGET0.clone(),r:32,theta:2.05,phi:0.92};
@@ -914,6 +944,7 @@ toggle('tgRoof', on=>{const np=level!=='s';gRoof.visible=on&&np;gCeil.visible=on
 toggle('tgWalls',on=>{gInner.visible=on&&level!=='s';});
 toggle('tgFurn', on=>{gFurn.visible=on&&level!=='s';gBaseFurn.visible=on&&level!=='np';});
 toggle('tgOut',  on=>{gOut.visible=on&&level!=='s';});
+toggle('tgFig',  on=>{FIG.userData.want=on;FIG.visible=on&&mode!=='walk';});
 toggle('tgLbl',  on=>{labels.style.display=on?'':'none';});
 toggle('tgNight',on=>{
   if(on){
@@ -965,6 +996,15 @@ function setLevel(lv){
 document.querySelectorAll('#levels .lv').forEach(b=>
   b.addEventListener('click',()=>setLevel(b.dataset.lvl)));
 
+let walkFov=55;
+(function fovControl(){
+  const sl=document.getElementById('fov'), out=document.getElementById('fovVal');
+  sl.addEventListener('input',()=>{
+    walkFov=+sl.value; out.textContent=walkFov+'°';
+    if(mode==='walk'){ camera.fov=walkFov; camera.updateProjectionMatrix(); }
+  });
+})();
+
 function floorColors(realistic){
   ALL.forEach(r=>{
     const mesh=floorMesh(r.id);
@@ -974,7 +1014,8 @@ function floorColors(realistic){
 function setMode(m){
   mode=m;
   document.getElementById('btnWalk').classList.toggle('on',m==='walk');
-  camera.fov=(m==='walk')?70:48; camera.updateProjectionMatrix();
+  camera.fov=(m==='walk')?walkFov:48; camera.updateProjectionMatrix();
+  FIG.visible=(m!=='walk')&&FIG.userData.want!==false;
   floorColors(m==='walk');
   if(m!=='walk'&&document.pointerLockElement===el) document.exitPointerLock();
   if(m==='walk'){
@@ -1040,7 +1081,11 @@ function loop(now){
     const mz=WZ(walk.pos.z), mx=walk.pos.x;
     const flr=(walk.floor<0)?'s':'np';
     const here=ALL.find(q=>q.lvl===flr&&mx>=q.x0&&mx<=q.x1&&mz>=q.z0&&mz<=q.z1);
-    hereEl.textContent=here?here.n+'  '+here.name:'';
+    FIG.position.set(walk.pos.x,walk.floor,WZ(walk.pos.z));
+    FIG.rotation.y=walk.yaw+Math.PI;
+    hereEl.textContent=here?here.n+'  '+here.name+'  ·  '+fmt(here.a)+' m²  ·  '
+      +(here.x1-here.x0).toFixed(1).replace('.',',')+' × '
+      +(here.z1-here.z0).toFixed(1).replace('.',',')+' m':'';
     hereEl.style.opacity=here?1:0;
   }else hereEl.style.opacity=0;
   applyCamera();
